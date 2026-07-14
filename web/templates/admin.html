@@ -8093,23 +8093,7 @@
       </div>
 
 
-        <div class="modal" x-show="showUserModal" style="display:none">
-          <div class="modal-content" @click.outside="showUserModal=false">
-            <h3>Add New User</h3>
-            <label class="form-label">Username</label>
-            <input type="text" class="form-input" x-model="userForm.username">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" x-model="userForm.email">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-input" x-model="userForm.password">
-            <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
-              <button class="btn" @click="showUserModal=false">Cancel</button>
-              <button class="btn btn-primary" @click="saveUser()">Save</button>
-            </div>
-          </div>
-        </div>
-
-      <!-- PLANS PAGE -->
+        <!-- PLANS PAGE -->
       <div x-show="page==='plans'" x-data="plansPage()">
         <div class="page-header">
           <div><div class="page-title">SaaS Plans</div><div class="page-sub">Manage your hosting products and prices</div></div>
@@ -8207,6 +8191,28 @@
               <tr x-show="orders.length===0"><td colspan="6" style="text-align:center">No orders yet.</td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="modal" x-show="showOrderModal" style="display:none">
+          <div class="modal-content" @click.outside="showOrderModal=false">
+            <h3>Add New Order</h3>
+            <label class="form-label">Username (Must exist)</label>
+            <input type="text" class="form-input" x-model="orderForm.username">
+            <label class="form-label">Plan ID</label>
+            <input type="number" class="form-input" x-model="orderForm.plan_id">
+            <label class="form-label">Domain/Hostname</label>
+            <input type="text" class="form-input" x-model="orderForm.domain">
+            <label class="form-label">Status</label>
+            <select class="form-input" x-model="orderForm.status">
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="suspended">Suspended</option>
+            </select>
+            <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+              <button class="btn" @click="showOrderModal=false">Cancel</button>
+              <button class="btn btn-primary" @click="saveOrder()">Save</button>
+            </div>
+          </div>
         </div>
       </div>
 
