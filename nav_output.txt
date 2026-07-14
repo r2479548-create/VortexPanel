@@ -1,0 +1,56 @@
+Found dashboard at line 215: { id:'dashboard',    icon:'▦', label:'Dashboard',        color:'#2563eb', colorBg:'#dbeafe' },
+210:         { id:'plans',  icon:'🛍', label:'SaaS Plans',  color:'#d97706', colorBg:'#fef3c7' },
+211:         { id:'orders', icon:'🛒', label:'SaaS Orders', color:'#2563eb', colorBg:'#dbeafe' },
+212:       ]},
+213: 
+214:       { group: 'Overview', items: [
+215:         { id:'dashboard',    icon:'▦', label:'Dashboard',        color:'#2563eb', colorBg:'#dbeafe' },
+216:         { id:'websites',     icon:'🌐', label:'Websites',        color:'#16a34a', colorBg:'#dcfce7' },
+217:         { id:'wp',           icon:'🔷', label:'WP Toolkit',      color:'#2563eb', colorBg:'#dbeafe' },
+218:         { id:'node-projects',icon:'💚', label:'Node.js Projects',color:'#16a34a', colorBg:'#dcfce7' },
+219:         { id:'go-projects',  icon:'🔵', label:'Go Projects',     color:'#0369a1', colorBg:'#e0f2fe' },
+220:         { id:'databases',    icon:'🗄', label:'Databases',       color:'#d97706', colorBg:'#fef3c7' },
+221:         { id:'files',        icon:'📁', label:'File Manager',    color:'#db2777', colorBg:'#fce7f3' },
+222:       ]},
+223:       { group: 'Server', items: [
+224:         { id:'services',  icon:'⚙', label:'Services',    color:'#7c3aed', colorBg:'#ede9fe' },
+225:         { id:'modules',   icon:'📦', label:'App Store',   color:'#0891b2', colorBg:'#cffafe' },
+226:         { id:'docker',    icon:'🐋', label:'Docker',      color:'#0369a1', colorBg:'#e0f2fe' },
+227:         { id:'firewall',  icon:'🛡', label:'Firewall',    color:'#dc2626', colorBg:'#fee2e2' },
+228:         { id:'terminal',  icon:'⌨', label:'Terminal',    color:'#374151', colorBg:'#f3f4f6' },
+229:         { id:'backups',   icon:'💾', label:'Backups',     color:'#059669', colorBg:'#d1fae5' },
+230:       ]},
+231:       { group: 'Network', items: [
+232:         { id:'mail',  icon:'📧', label:'Mail Server', color:'#c2410c', colorBg:'#ffedd5' },
+233:         { id:'ftp',   icon:'📂', label:'FTP / SFTP',  color:'#0e7490', colorBg:'#cffafe' },
+234:         { id:'cdn',   icon:'⚡', label:'CDN Manager', color:'#a16207', colorBg:'#fef9c3' },
+235:       ]},
+236:       { group: 'System', items: [
+237:         { id:'cron',       icon:'⏱', label:'Cron Jobs',  color:'#6d28d9', colorBg:'#ede9fe' },
+238:         { id:'monitoring', icon:'📊', label:'Monitoring', color:'#0f766e', colorBg:'#ccfbf1' },
+239:         { id:'logs',       icon:'📋', label:'Log Viewer', color:'#374151', colorBg:'#f3f4f6' },
+240:         { id:'bandwidth',  icon:'📈', label:'Bandwidth',  color:'#0369a1', colorBg:'#e0f2fe' },
+241:         { id:'security',   icon:'🔐', label:'Security',   color:'#b91c1c', colorBg:'#fee2e2' },
+242:         { id:'waf',        icon:'🛡', label:'WAF',        color:'#9333ea', colorBg:'#f3e8ff' },
+243:         { id:'settings',   icon:'⚙', label:'Settings',   color:'#374151', colorBg:'#f3f4f6' },
+244:       ]},
+245:     ],
+246: 
+247:     async init() {
+248:       window.addEventListener('nav', e => this.go(e.detail.page));
+249:       // Check existing session first
+250:       try {
+251:         const r = await get('/api/auth/check');
+252:         if (r.ok && r.logged_in) {
+253:           this.username = r.username || 'admin';
+254:           this.loggedIn = true;
+255:           await this._onLoggedIn();
+256:         }
+257:       } catch {}
+258:       this.authChecked = true;
+259:     },
+260: 
+261:     // --- Login -----------------------------------------------------------------
+262:     async doLogin() {
+263:       if (!this.loginUser || !this.loginPass) {
+264:         this.loginErr = 'Enter username and password'; return;
