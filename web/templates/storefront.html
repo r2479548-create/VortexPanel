@@ -173,8 +173,8 @@
           </div>
           <div class="service-credentials" style="background:#f1f5f9; padding:15px; border-radius:10px;" x-show="order.status === 'active'">
             <h4 style="margin-top:0;">Server Login</h4>
-            <p><strong>IP Address:</strong> <span x-text="order.username"></span></p>
-            <p><strong>Root Password:</strong> <span x-text="order.password"></span></p>
+            <p><strong>Username:</strong> <span x-text="order.username"></span></p>
+            <p><strong>Password:</strong> <span x-text="order.password"></span></p>
           </div>
           <div x-show="order.status === 'pending'" style="color:var(--warning)">
             <i class="fa-solid fa-clock fa-spin"></i> Awaiting Crypto Confirmation

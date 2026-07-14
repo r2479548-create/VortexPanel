@@ -128,3 +128,37 @@ def delete_plan(plan_id):
         db.session.delete(plan)
         db.session.commit()
     return jsonify({'ok': True})
+
+@storefront_admin_bp.route('/api/storefront/orders/<int:order_id>/approve', methods=['POST'])
+def approve_order(order_id):
+    if not req(): return jsonify({'ok': False}), 401
+    
+    order = Order.query.get(order_id)
+    if not order:
+        return jsonify({'ok': False, 'error': 'Order not found'})
+        
+    import random, string
+    def rand_str(length=12): return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+    
+    # Update order details to active
+    order.status = 'active'
+    
+    # If the plan is Windows RDP, set script_username to Administrator, else root
+    if order.plan and order.plan.script_type == 'windows_rdp':
+        order.script_username = 'Administrator'
+    else:
+        order.script_username = 'root'
+        
+    order.script_password = rand_str(16)
+    
+    db.session.commit()
+    return jsonify({'ok': True})
+
+@storefront_admin_bp.route('/api/storefront/orders/<int:order_id>', methods=['DELETE'])
+def delete_order(order_id):
+    if not req(): return jsonify({'ok': False}), 401
+    order = Order.query.get(order_id)
+    if order:
+        db.session.delete(order)
+        db.session.commit()
+    return jsonify({'ok': True})

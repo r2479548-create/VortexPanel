@@ -7628,20 +7628,34 @@
         </div>
         <div class="card">
           <table class="table">
-            <thead><tr><th>ID</th><th>User</th><th>Plan</th><th>Domain</th><th>Status</th><th>Created</th></tr></thead>
-            <tbody>
-              <template x-for="o in orders" :key="o.id">
-                <tr>
-                  <td x-text="o.id"></td>
-                  <td x-text="o.username"></td>
-                  <td x-text="o.plan"></td>
-                  <td x-text="o.domain"></td>
-                  <td>
-                    <span :class="'badge ' + (o.status==='active'?'badge-green':'badge-gray')" x-text="o.status"></span>
-                  </td>
-                  <td x-text="o.created_at"></td>
-                </tr>
-              </template>
+             <thead><tr><th>ID</th><th>User</th><th>Plan</th><th>Domain & Credentials</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+             <tbody>
+               <template x-for="o in orders" :key="o.id">
+                 <tr>
+                   <td x-text="o.id"></td>
+                   <td x-text="o.username"></td>
+                   <td x-text="o.plan"></td>
+                   <td>
+                     <span x-text="o.domain"></span>
+                     <template x-if="o.script_username || o.script_password">
+                       <div style="font-size:11px; color:var(--text-dim); margin-top:4px;">
+                         RDP: <span x-text="o.script_username" style="color:var(--text); font-weight:bold;"></span> | 
+                         Pass: <span x-text="o.script_password" style="color:var(--text); font-weight:bold;"></span>
+                       </div>
+                     </template>
+                   </td>
+                   <td>
+                     <span :class="'badge ' + (o.status==='active'?'badge-green':'badge-gray')" x-text="o.status"></span>
+                   </td>
+                   <td x-text="o.created_at"></td>
+                   <td>
+                     <template x-if="o.status === 'pending'">
+                       <button class="btn btn-sm btn-primary" @click="approveOrder(o.id)" style="margin-right:5px; padding:4px 8px; font-size:11px;">Approve & Build</button>
+                     </template>
+                     <button class="btn btn-sm btn-ghost" style="color:var(--red); padding:4px 8px; font-size:11px;" @click="deleteOrder(o.id)">Delete</button>
+                   </td>
+                 </tr>
+               </template>
               <tr x-show="orders.length===0"><td colspan="6" style="text-align:center">No orders yet.</td></tr>
             </tbody>
           </table>

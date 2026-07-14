@@ -5324,6 +5324,36 @@ function ordersPage() {
       }
     },
 
+    async approveOrder(id) {
+      if(!confirm('Approve and build this order?')) return;
+      try {
+        const r = await post('/api/storefront/orders/' + id + '/approve');
+        if (r.ok) {
+          toast('Order approved and RDP build started!', 'success');
+          this.load();
+        } else {
+          toast(r.error || 'Failed to approve order', 'error');
+        }
+      } catch {
+        toast('Connection error', 'error');
+      }
+    },
+    async deleteOrder(id) {
+      if(!confirm('Delete this order?')) return;
+      try {
+        const r = await fetch('/api/storefront/orders/' + id, {method: 'DELETE'});
+        const res = await r.json();
+        if (res.ok) {
+          toast('Order deleted successfully', 'success');
+          this.load();
+        } else {
+          toast(res.error || 'Failed to delete order', 'error');
+        }
+      } catch {
+        toast('Connection error', 'error');
+      }
+    },
+
     init() {
       this.load();
       window.addEventListener('vp:page', e => { if (e.detail === 'orders') this.load(); });
