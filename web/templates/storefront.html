@@ -62,68 +62,70 @@
         <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80" alt="VPS Servers" style="max-width:100%; height:auto; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.15); margin-bottom:40px;">
       </div>
 
+      <!-- Currency Switcher -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; background: var(--bg-card); padding: 10px 20px; border-radius: 12px; max-width: fit-content; margin-left: auto; margin-right: auto; box-shadow: var(--shadow-soft);">
+        <span style="font-weight: 600; color: var(--text-muted); font-size: 0.95rem;">Select Currency:</span>
+        <button @click="currency = 'USD'" :style="currency === 'USD' ? 'background: #0ea5e9; color: white;' : 'background: transparent; color: var(--text-primary);'" style="border: none; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;">USD ($)</button>
+        <button @click="currency = 'INR'" :style="currency === 'INR' ? 'background: #0ea5e9; color: white;' : 'background: transparent; color: var(--text-primary);'" style="border: none; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;">INR (₹)</button>
+      </div>
+
       <div class="plan-grid">
         <template x-for="plan in plans" :key="plan.id">
-          <div class="plan-card" style="padding: 0; border: 1px solid #e5e7eb; border-radius: 4px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; display: flex; flex-direction: column; overflow: hidden; transition: box-shadow 0.3s ease;">
+          <div class="plan-card" style="padding: 0; border: 1px solid #e5e7eb; border-radius: 16px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; display: flex; flex-direction: column; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.05)'">
             
-            <div style="padding: 30px;">
+            <div style="padding: 30px; display: flex; flex-direction: column; height: 100%;">
               <!-- Top Section -->
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                  <h3 x-text="plan.name" style="margin: 0; font-size: 1.5rem; color: #1f2937;"></h3>
-                  <img src="https://flagcdn.com/24x18/in.png" alt="India Flag" style="border-radius: 2px; width: 24px; height: 16px;">
+                  <h3 x-text="plan.name" style="margin: 0; font-size: 1.4rem; font-weight: 700; color: #1f2937;"></h3>
+                  <img :src="getFlag(plan)" alt="Location Flag" style="border-radius: 3px; width: 24px; height: 16px; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 </div>
-                <div style="color: #1f2937; font-size: 1.4rem; display: flex; gap: 10px;">
-                  <i class="fa-brands fa-ubuntu"></i>
-                  <i class="fa-brands fa-windows"></i>
+                <div style="color: #4b5563; font-size: 1.3rem; display: flex; gap: 12px; align-items: center;">
+                  <i class="fa-brands fa-ubuntu" title="Supports Linux"></i>
+                  <i class="fa-brands fa-windows" title="Supports Windows RDP"></i>
                 </div>
               </div>
               
-              <div style="text-align: left; color: #dc2626; font-size: 0.95rem; font-weight: 600; margin-bottom: 25px;">Up to 35% Lifetime</div>
+              <div style="text-align: left; color: #dc2626; font-size: 0.9rem; font-weight: 700; margin-bottom: 20px;">Up to 35% Lifetime</div>
               
               <!-- Pricing -->
-              <div class="plan-price" style="font-size: 2.5rem; font-weight: 700; color: #111827; margin: 10px 0;">
-                $<span x-text="plan.price"></span><span style="font-size: 1.2rem; color: #4b5563; font-weight: 500;">/mo</span>
+              <div class="plan-price" style="font-size: 2.6rem; font-weight: 800; color: #111827; margin: 10px 0; text-align: center;">
+                <span x-show="currency === 'USD'">$<span x-text="parseFloat(plan.price).toFixed(2)"></span></span>
+                <span x-show="currency === 'INR'">₹<span x-text="Math.round(plan.price * 83)"></span></span>
+                <span style="font-size: 1.1rem; color: #6b7280; font-weight: 500;">/mo</span>
               </div>
-              <div style="text-decoration: line-through; color: #6b7280; font-size: 1.1rem; margin-bottom: 5px;">
-                $<span x-text="(plan.price * 1.53).toFixed(2)"></span>/mo
+              
+              <div style="text-decoration: line-through; color: #9ca3af; font-size: 1.1rem; margin-bottom: 4px; text-align: center;">
+                <span x-show="currency === 'USD'">$<span x-text="(plan.price * 1.53).toFixed(2)"></span></span>
+                <span x-show="currency === 'INR'">₹<span x-text="Math.round(plan.price * 1.53 * 83)"></span></span>/mo
               </div>
-              <div style="color: #dc2626; font-size: 0.95rem; margin-bottom: 25px;">1GBPS network speed</div>
+              
+              <div style="color: #dc2626; font-size: 0.9rem; font-weight: 600; margin-bottom: 25px; text-align: center;">1GBPS network speed</div>
               
               <!-- Order Button -->
-              <button class="btn-buy" style="background: #0ea5e9; color: white; border: none; border-radius: 4px; padding: 12px; font-weight: 500; font-size: 1.1rem; width: 100%; margin-bottom: 30px; transition: background 0.2s; cursor: pointer;" @click="openCheckout(plan)" onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
-                Order Now
+              <button class="btn-buy" style="background: #0ea5e9; color: white; border: none; border-radius: 8px; padding: 14px; font-weight: 600; font-size: 1.1rem; width: 100%; margin-bottom: 25px; transition: background 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;" @click="openCheckout(plan)" onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
+                Order Now <i class="fa-solid fa-arrow-right"></i>
               </button>
               
-              <hr style="border: none; border-top: 1px solid #e5e7eb; margin-bottom: 20px;">
-              <div style="color: #4b5563; font-size: 1rem; margin-bottom: 30px;">Renew at same discount price</div>
+              <hr style="border: none; border-top: 1px solid #f3f4f6; margin-bottom: 20px;">
+              <div style="color: #4b5563; font-size: 0.95rem; font-weight: 500; margin-bottom: 25px; text-align: center;">Renew at same discount price</div>
               
               <!-- Features List -->
-              <div style="text-align: left; display: flex; flex-direction: column; gap: 25px;">
-                <template x-for="(feature, index) in plan.description.split(' • ')" :key="index">
-                  <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="color: #0ea5e9; font-size: 1.8rem; width: 35px; text-align: center;">
-                      <i class="fa-solid" :class="{
-                        'fa-microchip': index === 0,
-                        'fa-memory': index === 1,
-                        'fa-hard-drive': index === 2,
-                        'fa-gauge-high': index === 3,
-                        'fa-clock': index === 4,
-                        'fa-check': index > 4
-                      }"></i>
+              <div style="text-align: left; display: flex; flex-direction: column; gap: 20px; margin-top: auto;">
+                <template x-for="(feature, idx) in getFeatures(plan)" :key="idx">
+                  <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="color: #0ea5e9; font-size: 1.4rem; width: 28px; text-align: center; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid" :class="feature.icon"></i>
                     </div>
                     <div style="display: flex; flex-direction: column;">
-                      <span style="color: #4b5563; font-size: 0.9rem; margin-bottom: 4px;" x-text="['Processor', 'Memory / RAM', 'Storage Space', 'Network Speed', 'Delivery Time'][index] || 'Feature'"></span>
-                      <span style="color: #111827; font-weight: 500; font-size: 1rem;" x-text="feature"></span>
+                      <span style="color: #9ca3af; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;" x-text="feature.name"></span>
+                      <span style="color: #1f2937; font-weight: 600; font-size: 0.95rem;" x-text="feature.value"></span>
                     </div>
                   </div>
                 </template>
               </div>
             </div>
-          </div>
-          </template>
-            </div>
-            <button class="btn-buy" @click="openCheckout(plan)">Buy Now <i class="fa-solid fa-arrow-right"></i></button>
+            
           </div>
         </template>
       </div>
@@ -212,6 +214,60 @@
         orders: [],
         loginData: { email: '', password: '' },
         registerData: { username: '', email: '', password: '' },
+        currency: 'USD',
+        getFeatures(plan) {
+            let desc = plan.description || '';
+            let ram = 'N/A';
+            let cpu = 'N/A';
+            let storage = 'N/A';
+            let network = '1 Gbps Network Speed';
+            let delivery = 'Fast';
+            
+            let ramMatch = desc.match(/(\d+)\s*GB\s*RAM/i);
+            if (ramMatch) ram = ramMatch[1] + ' GB RAM';
+            
+            let cpuMatch = desc.match(/(\d+)\s*(vCPU|Cores)/i);
+            if (cpuMatch) {
+                cpu = cpuMatch[1] + ' x 4.0GHz (High-End)';
+            } else if (desc.match(/(\d+)\s*Core/i)) {
+                let match = desc.match(/(\d+)\s*Core/i);
+                cpu = match[1] + ' Cores';
+            }
+            
+            let storageMatch = desc.match(/(\d+)\s*GB\s*(SSD|NVMe|Space)/i);
+            if (storageMatch) storage = storageMatch[1] + ' GB SSD';
+            
+            if (ram === 'N/A') {
+                if (desc.includes('16GB')) ram = '16 GB RAM';
+                else if (desc.includes('2GB')) ram = '2 GB RAM';
+                else if (desc.includes('8GB')) ram = '8 GB RAM';
+            }
+            if (cpu === 'N/A') {
+                if (desc.includes('8vCPU')) cpu = '8 x 4.0GHz (High-End)';
+                else if (desc.includes('2vCPU')) cpu = '2 x 3.0GHz';
+                else if (desc.includes('4 vCPU')) cpu = '4 x 3.5GHz';
+            }
+            if (storage === 'N/A') {
+                if (desc.includes('200GB')) storage = '200 GB SSD';
+                else if (desc.includes('100GB')) storage = '100 GB SSD';
+            }
+
+            return [
+                { name: 'Processor', value: cpu, icon: 'fa-microchip' },
+                { name: 'Memory / RAM', value: ram, icon: 'fa-memory' },
+                { name: 'Storage Space', value: storage, icon: 'fa-hard-drive' },
+                { name: 'Network Speed', value: network, icon: 'fa-gauge-high' },
+                { name: 'Delivery Time', value: delivery, icon: 'fa-clock' }
+            ];
+        },
+        getFlag(plan) {
+            let name = plan.name.toLowerCase();
+            let desc = (plan.description || '').toLowerCase();
+            if (name.includes('ind') || desc.includes('india') || name.startsWith('in')) {
+                return 'https://flagcdn.com/24x18/in.png';
+            }
+            return 'https://flagcdn.com/24x18/us.png';
+        },
         
         // Checkout state
         selectedPlan: null,
