@@ -1,6 +1,6 @@
 from flask_sock import Sock
 from flask import session
-import os, pty, fcntl, struct, termios, select, subprocess, threading, signal, time
+import os, struct, select, subprocess, threading, signal, time
 
 sock = Sock()
 
@@ -9,6 +9,13 @@ def req(): return 'user' in session
 @sock.route('/ws/terminal')
 def terminal_ws(ws):
     if not req():
+        ws.close()
+        return
+
+    try:
+        import pty, fcntl, termios
+    except ImportError:
+        ws.send(b"Terminal is not supported on Windows.\\r\\n")
         ws.close()
         return
 
@@ -82,3 +89,4 @@ def terminal_ws(ws):
                 os.close(fd)
             except Exception:
                 pass
+

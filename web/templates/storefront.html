@@ -13,7 +13,7 @@
   .store-container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
   .header { text-align: center; margin-bottom: 60px; }
   .header h1 { font-size: 3rem; margin-bottom: 15px; background: linear-gradient(90deg, var(--accent), var(--accent-3)); -webkit-background-clip: text; color: transparent; }
-  .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+  .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; align-items: stretch; }
   .plan-card { background: var(--bg-card); border-radius: 20px; padding: 40px; text-align: center; box-shadow: var(--shadow-soft); transition: transform 0.3s ease; }
   .plan-card:hover { transform: translateY(-10px); }
   .plan-price { font-size: 2.5rem; font-weight: 700; margin: 20px 0; color: var(--text-primary); }
@@ -34,7 +34,16 @@
 <body x-data="storefront()">
 
   <nav class="nav">
-    <div style="font-weight:700;font-size:1.5rem;color:var(--accent)"><i class="fa-solid fa-server"></i> VPS STORE</div>
+    <div style="font-weight:700;font-size:1.5rem;color:var(--accent); display:flex; align-items:center; gap:20px;">
+      <span style="display:flex; align-items:center; gap:10px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2162/2162988.png" alt="VPS Icon" style="width: 32px; height: 32px; object-fit: contain;">
+        VPS STORE
+      </span>
+      <select x-model="currency" @change="setCurrency($event.target.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font-size: 1rem; cursor: pointer; font-weight: 600;">
+        <option value="USD">USD ($)</option>
+        <option value="INR">INR (₹)</option>
+      </select>
+    </div>
     <div>
       <template x-if="!user">
         <div>
@@ -136,26 +145,12 @@
       <h2>Checkout</h2>
       <p>You are purchasing: <strong x-text="selectedPlan?.name"></strong> for <strong x-text="'$' + selectedPlan?.price"></strong></p>
       
-      <div style="margin-top:20px;">
-        <label style="font-weight:600;display:block;margin-bottom:8px;">Select Payment Method</label>
-        <select x-model="selectedMethod" class="crypto-select">
-          <option value="BTC">Bitcoin (BTC)</option>
-          <option value="ETH">Ethereum (ETH)</option>
-          <option value="XMR">Monero (XMR)</option>
-        </select>
-      </div>
-      
-      <div class="crypto-box" x-show="selectedMethod">
-        <p style="margin-top:0; font-weight:600;">Please send <span x-text="'$' + selectedPlan?.price"></span> in <span x-text="selectedMethod"></span> to:</p>
-        <div style="background:#000; color:#0f0; padding:15px; border-radius:8px; font-family:monospace; word-break:break-all; font-size:0.9rem;" x-text="cryptoAddresses[selectedMethod]"></div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:10px;">Once paid, click the button below. Your VPS will be provisioned after 1 network confirmation.</p>
-      </div>
-      
       <div style="display:flex; gap:10px; margin-top:30px;">
         <button class="btn" style="flex:1;" @click="view = 'home'">Cancel</button>
-        <button class="btn-buy" style="flex:2;" @click="completeOrder()" :disabled="orderLoading">
-          <span x-show="!orderLoading">I have paid</span>
-          <span x-show="orderLoading">Processing...</span>
+        <button class="btn-buy" style="flex:2; display:flex; align-items:center; justify-content:center; gap:8px;" @click="completeOrder()" :disabled="orderLoading">
+          <img src="https://cdn-icons-png.flaticon.com/512/1086/1086741.png" style="width: 20px;" x-show="!orderLoading" alt="Pay">
+          <span x-show="!orderLoading">Pay Now (ZapUPI)</span>
+          <span x-show="orderLoading">Creating Order...</span>
         </button>
       </div>
     </div>
@@ -316,22 +311,22 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         plan_id: this.selectedPlan.id,
-                        payment_method: this.selectedMethod,
+                        currency: this.currency,
                         domain: 'vps-' + Math.floor(Math.random() * 1000000) + '.local'
                     })
                 });
                 const data = await res.json();
-                if (data.success) {
-                    alert('Order placed successfully! It will be provisioned once crypto payment is verified.');
-                    await this.checkAuth();
-                    this.view = 'dashboard';
+                if (data.success && data.payment_url) {
+                    // Redirect to ZapUPI payment page in the same tab
+                    window.location.href = data.payment_url;
                 } else {
                     alert(data.error || 'Failed to place order.');
+                    this.orderLoading = false;
                 }
             } catch (e) {
                 alert('An error occurred.');
+                this.orderLoading = false;
             }
-            this.orderLoading = false;
         },
         async doLogin() {
           const res = await fetch('/api/store/login', {

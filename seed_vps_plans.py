@@ -14,17 +14,17 @@ with app.app_context():
     Plan.query.delete()
     db.session.commit()
     
-    # Add new VPS plans
+    # Add new Windows RDP plans
     plan1 = Plan(
-        name="Performance VPS",
-        price=25.0,
-        description="200GB SSD Space • 16GB RAM • 8vCPU Cores • Unmetered Bandwidth"
+        name="Windows RDP 8GB",
+        price=15.0,
+        description="Windows Server 2022 • 8GB RAM • 4vCPU Cores • 100GB NVMe • RDP Access"
     )
     
     plan2 = Plan(
-        name="Starter VPS",
-        price=8.0,
-        description="200GB SSD Space • 2GB RAM • 2vCPU Cores • Unmetered Bandwidth"
+        name="Windows RDP 16GB",
+        price=25.0,
+        description="Windows Server 2022 • 16GB RAM • 8vCPU Cores • 200GB NVMe • RDP Access"
     )
     
     db.session.add(plan1)
