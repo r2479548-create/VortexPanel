@@ -65,8 +65,8 @@
       <!-- Currency Switcher -->
       <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; background: var(--bg-card); padding: 10px 20px; border-radius: 12px; max-width: fit-content; margin-left: auto; margin-right: auto; box-shadow: var(--shadow-soft);">
         <span style="font-weight: 600; color: var(--text-muted); font-size: 0.95rem;">Select Currency:</span>
-        <button @click="currency = 'USD'" :style="currency === 'USD' ? 'background: #0ea5e9; color: white;' : 'background: transparent; color: var(--text-primary);'" style="border: none; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;">USD ($)</button>
-        <button @click="currency = 'INR'" :style="currency === 'INR' ? 'background: #0ea5e9; color: white;' : 'background: transparent; color: var(--text-primary);'" style="border: none; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;">INR (₹)</button>
+        <button @click="setCurrency('USD')" :style="currency === 'USD' ? 'background: #0ea5e9; color: white;' : 'background: transparent; color: var(--text-primary);'" style="border: none; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;">USD ($)</button>
+        <button @click="setCurrency('INR')" :style="currency === 'INR' ? 'background: #0ea5e9; color: white;' : 'background: transparent; color: var(--text-primary);'" style="border: none; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;">INR (₹)</button>
       </div>
 
       <div class="plan-grid">
@@ -214,7 +214,11 @@
         orders: [],
         loginData: { email: '', password: '' },
         registerData: { username: '', email: '', password: '' },
-        currency: 'USD',
+        currency: localStorage.getItem('vp_store_currency') || 'USD',
+        setCurrency(curr) {
+            this.currency = curr;
+            localStorage.setItem('vp_store_currency', curr);
+        },
         getFeatures(plan) {
             let desc = plan.description || '';
             let ram = 'N/A';
