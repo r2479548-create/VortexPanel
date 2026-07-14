@@ -93,7 +93,7 @@ def buy():
         return jsonify({'error': 'Plan not found'}), 404
         
     # Unique order ID for ZapUPI
-    unique_order_id = f"ORD-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+    unique_order_id = f"ORD{int(time.time())}{uuid.uuid4().hex[:6]}"
     
     # Calculate amount in INR
     amount_inr = str(int(plan.price * 83))

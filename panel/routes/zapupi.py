@@ -36,7 +36,7 @@ def checkout(plan_id):
     # 3. Create ZapUPI Order
     payload = {
         "zap_key": ZAPUPI_KEY,
-        "order_id": f"INV-{new_invoice.id}-{int(time.time())}",
+        "order_id": f"INV{new_invoice.id}{int(time.time())}",
         "amount": str(int(plan.price)),
         "remark": f"{plan.name} | UID:{user.id}",
         "webhook_url": "https://panel.bestsmmpanel.eu.cc/webhook/zapupi"
@@ -65,9 +65,9 @@ def zapupi_webhook():
     order_id_str = data.get('order_id') # format: INV-ID-TIMESTAMP
     status = data.get('status')
     
-    if status == 'Success' and order_id_str.startswith('INV-'):
-        invoice_id = int(order_id_str.split('-')[1])
-        invoice = Invoice.query.get(invoice_id)
+    if status == 'Success' and order_id_str.startswith('INV'):
+        # Just use gateway_reference to find invoice
+        invoice = Invoice.query.filter_by(gateway_reference=order_id_str).first()
         if invoice and invoice.status != 'paid':
             # Mark invoice as paid
             invoice.status = 'paid'
