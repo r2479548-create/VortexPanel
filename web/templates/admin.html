@@ -204,17 +204,17 @@
             <div class="stat-accent" style="background:var(--stat-ram)"></div>
             <div class="stat-icon" style="background:rgba(16,185,129,0.15)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--stat-ram)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="16" x2="6" y2="16"></line><line x1="10" y1="16" x2="10" y2="16"></line><line x1="14" y1="16" x2="14" y2="16"></line><line x1="18" y1="16" x2="18" y2="16"></line></svg></div>
             <div class="stat-label">RAM</div>
-            <div class="stat-value" style="color:var(--stat-ram)" x-text="fmtBytes(stats.ram?.used)">0</div>
-            <div class="stat-bar stat-bar-ram"><div class="stat-fill ram" :style="'width:'+ramPct()+'%'"></div></div>
-            <div class="stat-sub" x-text="fmtBytes(stats.ram?.used)+' / '+fmtBytes(stats.ram?.total)"></div>
+            <div class="stat-value" style="color:var(--stat-ram);font-size:20px;padding-top:2px">Unlimited</div>
+            <div class="stat-bar stat-bar-ram"><div class="stat-fill ram" style="width:100%"></div></div>
+            <div class="stat-sub">∞ / ∞ GB</div>
           </div>
           <div class="stat-card stat-card-disk">
             <div class="stat-accent" style="background:var(--stat-disk)"></div>
             <div class="stat-icon" style="background:rgba(245,158,11,0.15)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--stat-disk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div>
             <div class="stat-label">Disk</div>
-            <div class="stat-value" style="color:var(--stat-disk)" x-text="diskPct()+'%'">0%</div>
-            <div class="stat-bar stat-bar-disk"><div class="stat-fill disk" :style="'width:'+diskPct()+'%'"></div></div>
-            <div class="stat-sub" x-text="fmtBytes(stats.disk?.used)+' / '+fmtBytes(stats.disk?.total)"></div>
+            <div class="stat-value" style="color:var(--stat-disk);font-size:20px;padding-top:2px">Unlimited</div>
+            <div class="stat-bar stat-bar-disk"><div class="stat-fill disk" style="width:100%"></div></div>
+            <div class="stat-sub">∞ / ∞ GB</div>
           </div>
           <div class="stat-card stat-card-uptime">
             <div class="stat-accent" style="background:var(--stat-uptime)"></div>
