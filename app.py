@@ -102,6 +102,12 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        
+        from panel.models import Plan
+        if Plan.query.count() == 0:
+            db.session.add(Plan(name="Performance VPS", price=25.0, description="200GB SSD Space • 16GB RAM • 8vCPU Cores • Unmetered Bandwidth"))
+            db.session.add(Plan(name="Starter VPS", price=8.0, description="200GB SSD Space • 2GB RAM • 2vCPU Cores • Unmetered Bandwidth"))
+            db.session.commit()
 
     # -- Secret key ------------------------------------------------------------
     # ENV var override available for Docker/container deployments

@@ -76,4 +76,41 @@ def me():
 @storefront_bp.route('/api/store/logout', methods=['POST'])
 def logout():
     session.pop('customer_id', None)
-    return jsonify({'success': True})
+@storefront_bp.route('/api/store/buy', methods=['POST'])
+def buy():
+    customer_id = session.get('customer_id')
+    if not customer_id:
+        return jsonify({'error': 'Not logged in'}), 401
+        
+    data = request.json
+    plan_id = data.get('plan_id')
+    domain = data.get('domain', f'vps-{int(time.time())}.local')
+    payment_method = data.get('payment_method') # ETH, BTC, or Monero
+    
+    plan = Plan.query.get(plan_id)
+    if not plan:
+        return jsonify({'error': 'Plan not found'}), 404
+        
+    # Create the Order
+    new_order = Order(
+        user_id=customer_id,
+        plan_id=plan.id,
+        domain=domain,
+        status='pending' # Awaiting crypto confirmation
+    )
+    db.session.add(new_order)
+    db.session.commit() # commit to get order id
+    
+    # Create the Invoice
+    new_invoice = Invoice(
+        user_id=customer_id,
+        order_id=new_order.id,
+        amount=plan.price,
+        status='pending',
+        gateway_reference=f'Crypto: {payment_method}'
+    )
+    db.session.add(new_invoice)
+    db.session.commit()
+    
+    return jsonify({'success': True, 'message': 'Order placed successfully. Please complete the crypto payment.', 'order_id': new_order.id})
+
