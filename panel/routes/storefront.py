@@ -104,7 +104,7 @@ def buy():
     host = request.host_url.rstrip('/')
     webhook_url = f"{host}/api/store/webhook/zapupi"
     
-    zap_key = "YOUR_ZAPUPI_KEY_HERE" # User must replace this
+    zap_key = "zapd3ac6edc258246e7655fa384a0f4b605"
     
     try:
         resp = requests.post("https://pay.zapupi.com/api/create-order", json={

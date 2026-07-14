@@ -7,7 +7,7 @@ from panel.utils.provision import provision_smm_panel
 
 zapupi_bp = Blueprint('zapupi', __name__)
 
-ZAPUPI_KEY = 'ENTER_YOUR_ZAPUPI_KEY_HERE' # You can move this to DB or config later
+ZAPUPI_KEY = 'zapd3ac6edc258246e7655fa384a0f4b605' # You can move this to DB or config later
 ZAPUPI_API_URL = 'https://pay.zapupi.com/api/create-order'
 
 @zapupi_bp.route('/checkout/<int:plan_id>', methods=['GET'])
