@@ -17,7 +17,12 @@ try:
 except ImportError:
     _server_session_available = False
 
+from panel.database import db
+import panel.models
+
 from panel.routes.auth      import auth_bp
+from panel.routes.storefront import storefront_bp
+from panel.routes.zapupi import zapupi_bp
 from panel.routes.dashboard import dashboard_bp
 from panel.routes.websites_core import websites_bp
 from panel.routes.websites_ssl import *  # noqa
@@ -89,6 +94,13 @@ def _get_secret_key() -> bytes:
 
 def create_app():
     app = Flask(__name__, template_folder='web/templates', static_folder='web/static')
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////opt/errormodz/billing.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
 
     # -- Secret key ------------------------------------------------------------
     # ENV var override available for Docker/container deployments
@@ -132,7 +144,7 @@ def create_app():
                dns_bp, mail_bp, ftp_bp, cron_bp, docker_bp, monitoring_bp,
                settings_bp, modules_bp, main_bp, security_bp, bandwidth_bp,
                caddy_bp, cdn_bp, update_bp, ai_bp, ddns_bp, cloud_backup_bp,
-               logs_bp, wp_bp, nodejs_bp, go_bp, import_bp]:
+               logs_bp, wp_bp, nodejs_bp, go_bp, import_bp, zapupi_bp, storefront_bp]:
         app.register_blueprint(bp)
     terminal_sock.init_app(app)
 
