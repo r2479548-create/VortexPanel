@@ -66,7 +66,8 @@ mkdir -p "$INSTALL_DIR"
 # breaks future `git pull` + deploy.sh workflows with no way to trace it back).
 SRC_DIR="/root/Errormodz"
 if [ -d "$SRC_DIR/.git" ]; then
-    log "Using existing git checkout at $SRC_DIR"
+    log "Updating existing git checkout at $SRC_DIR"
+    cd "$SRC_DIR" && git pull origin main
 elif [ -e "$SRC_DIR" ]; then
     # Something is there but it's not a valid git repo (e.g. leftover files
     # from a previous manual copy) — move it aside rather than fail or silently
