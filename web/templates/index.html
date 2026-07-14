@@ -22,6 +22,7 @@
   <!-- app.js must load before Alpine so all function definitions exist -->
   <script src="/static/js/app.js"></script>
   <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -64,7 +65,7 @@
     <!-- Step 2: 2FA TOTP code -->
     <div x-show="show2fa">
       <div style="text-align:center;margin-bottom:16px">
-        <div style="font-size:28px;margin-bottom:8px">🔐</div>
+        <div style="font-size:28px;margin-bottom:8px"><i class="fa-solid fa-circle-dot"></i></div>
         <div style="font-size:14px;font-weight:600;color:var(--text-primary)">Two-Factor Authentication</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Enter the 6-digit code from your authenticator app</div>
       </div>
@@ -120,7 +121,7 @@
             <span x-text="item.label"></span>
             <span x-show="!pageAvailable(item.id)"
                   style="margin-left:auto;font-size:10px;color:var(--text-muted)"
-                  title="Module not installed">🔒</span>
+                  title="Module not installed"><i class="fa-solid fa-lock"></i></span>
           </div>
         </template>
       </div>
@@ -193,7 +194,7 @@
         <div class="grid-4" style="margin-bottom:16px">
           <div class="stat-card stat-card-cpu">
             <div class="stat-accent" style="background:var(--stat-cpu)"></div>
-            <div class="stat-icon">🖥</div>
+            <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
             <div class="stat-label">CPU Usage</div>
             <div class="stat-value" style="color:var(--stat-cpu)" x-text="stats.cpu+'%'">0%</div>
             <div class="stat-bar stat-bar-cpu"><div class="stat-fill cpu" :style="'width:'+stats.cpu+'%'"></div></div>
@@ -201,7 +202,7 @@
           </div>
           <div class="stat-card stat-card-ram">
             <div class="stat-accent" style="background:var(--stat-ram)"></div>
-            <div class="stat-icon">🧠</div>
+            <div class="stat-icon"><i class="fa-solid fa-brain"></i></div>
             <div class="stat-label">RAM</div>
             <div class="stat-value" style="color:var(--stat-ram)" x-text="fmtBytes(stats.ram?.used)">0</div>
             <div class="stat-bar stat-bar-ram"><div class="stat-fill ram" :style="'width:'+ramPct()+'%'"></div></div>
@@ -209,7 +210,7 @@
           </div>
           <div class="stat-card stat-card-disk">
             <div class="stat-accent" style="background:var(--stat-disk)"></div>
-            <div class="stat-icon">💾</div>
+            <div class="stat-icon"><i class="fa-solid fa-floppy-disk"></i></div>
             <div class="stat-label">Disk</div>
             <div class="stat-value" style="color:var(--stat-disk)" x-text="diskPct()+'%'">0%</div>
             <div class="stat-bar stat-bar-disk"><div class="stat-fill disk" :style="'width:'+diskPct()+'%'"></div></div>
@@ -217,7 +218,7 @@
           </div>
           <div class="stat-card stat-card-uptime">
             <div class="stat-accent" style="background:var(--stat-uptime)"></div>
-            <div class="stat-icon">⏱</div>
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
             <div class="stat-label">Uptime</div>
             <div class="stat-value" style="font-size:18px;padding-top:4px;color:var(--stat-uptime)" x-text="stats.uptime||'—'"></div>
             <div class="stat-sub">Network ↓<span x-text="fmtBytes(stats.net?.rx)"></span> ↑<span x-text="fmtBytes(stats.net?.tx)"></span></div>
@@ -239,7 +240,7 @@
         <!-- SSL expiry warning banner -->
         <div x-show="sslAlerts.length>0"
              style="display:flex;align-items:flex-start;gap:12px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:16px">
-          <span style="font-size:18px;flex-shrink:0">🔒</span>
+          <span style="font-size:18px;flex-shrink:0"><i class="fa-solid fa-lock"></i></span>
           <div style="flex:1">
             <div style="font-size:13px;font-weight:600;color:#92400e;margin-bottom:3px"
                  x-text="sslAlerts.length+' SSL certificate'+(sslAlerts.length>1?'s':'')+' expiring soon'"></div>
@@ -308,7 +309,7 @@
         </div>
         <div class="card" style="padding:0;overflow:hidden">
           <template x-if="sites.length===0">
-            <div class="empty-state"><div class="empty-icon">🌐</div><div class="empty-text">No websites yet. Click "Add Site" to create one.</div></div>
+            <div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-globe"></i></div><div class="empty-text">No websites yet. Click "Add Site" to create one.</div></div>
           </template>
           <table class="data-table" x-show="sites.length>0">
             <thead><tr><th>Domain</th><th>Path</th><th>PHP</th><th>SSL</th><th>Status</th><th>Actions</th></tr></thead>
@@ -324,8 +325,8 @@
                           :class="'badge ' + (s.ssl_days<=7?'badge-red':(s.ssl_days<=30?'badge-orange':'badge-green'))"
                           style="cursor:pointer" @click="openDrawer(s);drawer.tab='ssl'"
                           :title="'Expires in '+s.ssl_days+' days'"
-                          x-text="s.ssl_days<0?'⚠ Expired':('🔒 '+s.ssl_days+'d left')"></span>
-                    <span x-show="s.ssl && s.ssl_days===null" class="badge badge-green" style="cursor:pointer" @click="openDrawer(s);drawer.tab='ssl'">🔒 SSL</span>
+                          x-text="s.ssl_days<0?'⚠ Expired':('<i class="fa-solid fa-lock"></i> '+s.ssl_days+'d left')"></span>
+                    <span x-show="s.ssl && s.ssl_days===null" class="badge badge-green" style="cursor:pointer" @click="openDrawer(s);drawer.tab='ssl'"><i class="fa-solid fa-lock"></i> SSL</span>
                   </td>
                   <td><span :class="'badge badge-'+(s.enabled?'green':'gray')" x-text="s.enabled?'Active':'Disabled'"></span></td>
                   <td>
@@ -494,7 +495,7 @@
                   <!-- Disk usage -->
                   <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg-raised);border-radius:8px;border:1px solid var(--border)">
                     <div style="display:flex;align-items:center;gap:10px">
-                      <span style="font-size:20px">💾</span>
+                      <span style="font-size:20px"><i class="fa-solid fa-floppy-disk"></i></span>
                       <div>
                         <div style="font-size:12px;font-weight:600;color:var(--text-muted)">Disk Usage</div>
                         <div x-show="!drawer.diskUsage.loading" style="font-size:16px;font-weight:700" x-text="drawer.diskUsage.size_human||'—'"></div>
@@ -799,7 +800,7 @@
 
                 <!-- Let's Encrypt -->
                 <div class="card" style="margin-bottom:14px">
-                  <div class="card-hd"><div><div class="card-title">🔒 Free SSL — Let's Encrypt</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Auto-renewal every 90 days</div></div></div>
+                  <div class="card-hd"><div><div class="card-title"><i class="fa-solid fa-lock"></i> Free SSL — Let's Encrypt</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Auto-renewal every 90 days</div></div></div>
                   <div class="form-group"><label class="form-label">Contact Email</label><input class="form-input" x-model="drawer.sslEmail" :placeholder="'admin@'+drawer.site?.domain"></div>
                   <button class="btn btn-success" @click="issueLetsEncrypt()" :disabled="drawer.loading" style="width:100%;justify-content:center">
                     <span x-show="drawer.loading" class="loading-spinner" style="width:12px;height:12px;border-width:2px"></span>
@@ -810,7 +811,7 @@
 
                 <!-- Manual SSL -->
                 <div class="card" style="margin-bottom:14px">
-                  <div class="card-hd"><div class="card-title">📋 Install Custom SSL</div></div>
+                  <div class="card-hd"><div class="card-title"><i class="fa-solid fa-clipboard"></i> Install Custom SSL</div></div>
                   <div class="form-group"><label class="form-label">Private Key (KEY)</label><textarea class="form-input" x-model="drawer.sslKey" placeholder="-----BEGIN PRIVATE KEY-----" style="min-height:80px;font-family:monospace;font-size:11px"></textarea></div>
                   <div class="form-group"><label class="form-label">Certificate (CRT)</label><textarea class="form-input" x-model="drawer.sslCert" placeholder="-----BEGIN CERTIFICATE-----" style="min-height:80px;font-family:monospace;font-size:11px"></textarea></div>
                   <button class="btn btn-primary btn-sm" @click="saveManualSSL()">Install SSL</button>
@@ -909,7 +910,7 @@
                     <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;cursor:pointer;border:2px solid;transition:.12s"
                          :style="drawer.phpVer===ver.version?'border-color:var(--accent);background:rgba(88,101,242,.08)':'border-color:var(--border);background:var(--bg-raised)'"
                          @click="drawer.phpVer=ver.version">
-                      <span style="font-size:18px">🐘</span>
+                      <span style="font-size:18px"><i class="fa-brands fa-php"></i></span>
                       <div style="flex:1">
                         <div style="font-weight:600;font-size:13px" x-text="'PHP '+ver.version"></div>
                         <div style="font-size:11px;color:var(--text-muted)" x-text="ver.binary||('/usr/bin/php'+ver.version)"></div>
@@ -921,7 +922,7 @@
                   <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;cursor:pointer;border:2px solid;transition:.12s"
                        :style="drawer.phpVer==='static'?'border-color:var(--accent);background:rgba(88,101,242,.08)':'border-color:var(--border);background:var(--bg-raised)'"
                        @click="drawer.phpVer='static'">
-                    <span style="font-size:18px">📄</span>
+                    <span style="font-size:18px"><i class="fa-regular fa-file"></i></span>
                     <div style="flex:1"><div style="font-weight:600;font-size:13px">Static (No PHP)</div><div style="font-size:11px;color:var(--text-muted)">HTML/CSS/JS only</div></div>
                   </div>
                 </div>
@@ -942,7 +943,7 @@
                     <button class="btn btn-danger btn-xs" @click="delProxy(p.name)">Delete</button>
                   </div>
                 </template>
-                <template x-if="!drawer.proxies?.length"><div class="empty-state" style="padding:24px"><div class="empty-icon">🔀</div><div class="empty-text">No proxy rules</div></div></template>
+                <template x-if="!drawer.proxies?.length"><div class="empty-state" style="padding:24px"><div class="empty-icon"><i class="fa-solid fa-shuffle"></i></div><div class="empty-text">No proxy rules</div></div></template>
                 <div x-show="drawer.showAddProxy" style="background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:14px">
                   <div class="form-row form-row-2"><div class="form-group"><label class="form-label">Path</label><input class="form-input" x-model="drawer.proxyForm.path" placeholder="/api"></div><div class="form-group"><label class="form-label">Target URL</label><input class="form-input" x-model="drawer.proxyForm.target" placeholder="http://127.0.0.1:3000"></div></div>
                   <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" @click="drawer.showAddProxy=false">Cancel</button><button class="btn btn-primary btn-sm" @click="addProxy()">Add</button></div>
@@ -970,7 +971,7 @@
               <!-- -- NODE.JS TAB -- -->
               <div x-show="drawer.tab==='nodejs'">
                 <div x-show="!drawer.nodejsEnabled" class="card">
-                  <div class="card-title" style="margin-bottom:12px">🚀 Run an App (Node.js / Python / Go)</div>
+                  <div class="card-title" style="margin-bottom:12px"><i class="fa-solid fa-rocket"></i> Run an App (Node.js / Python / Go)</div>
                   <div class="form-group"><label class="form-label">Runtime</label>
                     <select class="form-input" x-model="drawer.nodejsForm.runtime">
                       <option value="node">Node.js</option>
@@ -1002,7 +1003,7 @@
                 <!-- Environment Variables -->
                 <div x-show="drawer.nodejsEnabled" class="card" style="margin-top:14px">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                    <div class="card-title">🔐 Environment Variables</div>
+                    <div class="card-title"><i class="fa-solid fa-circle-dot"></i> Environment Variables</div>
                     <span class="badge badge-gray" style="font-size:10px" x-text="Object.keys(drawer.envVars||{}).length+' set'"></span>
                   </div>
                   <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px">
@@ -1046,7 +1047,7 @@
               <div x-show="drawer.tab==='maintenance'">
                 <div class="card">
                   <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-                    <div style="flex:1"><div class="card-title">🔧 Maintenance Mode</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Shows a maintenance page to all visitors</div></div>
+                    <div style="flex:1"><div class="card-title"><i class="fa-solid fa-wrench"></i> Maintenance Mode</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Shows a maintenance page to all visitors</div></div>
                     <span :class="'badge badge-'+(drawer.maintEnabled?'red':'green')" x-text="drawer.maintEnabled?'ON — Site Down':'OFF — Site Live'"></span>
                   </div>
                   <div class="form-group"><label class="form-label">Maintenance Message</label><textarea class="form-input" x-model="drawer.maintMessage" rows="3" placeholder="We are performing scheduled maintenance. Please check back soon."></textarea></div>
@@ -1093,7 +1094,7 @@
         <!-- Filter bar -->
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
           <div style="display:flex;align-items:center;gap:6px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px;flex:1;max-width:260px">
-            <span style="color:var(--text-muted);font-size:12px">🔍</span>
+            <span style="color:var(--text-muted);font-size:12px"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input x-model="searchQ" placeholder="Search sites…" style="border:none;outline:none;background:transparent;font-size:12px;color:var(--text-primary);width:100%" />
           </div>
           <button x-show="totalUpdates>0" class="btn btn-ghost btn-sm" style="color:var(--accent-warn);border-color:var(--accent-warn)" @click="filterTab='updates'">
@@ -1108,13 +1109,13 @@
 
         <!-- Loading state -->
         <div x-show="loading" style="text-align:center;padding:60px;color:var(--text-muted)">
-          <div style="font-size:32px;margin-bottom:12px">🔷</div>
+          <div style="font-size:32px;margin-bottom:12px"><i class="fa-solid fa-circle-dot"></i></div>
           <div>Scanning for WordPress installations…</div>
         </div>
 
         <!-- Empty state -->
         <div x-show="!loading && sites.length===0" style="text-align:center;padding:60px;color:var(--text-muted)">
-          <div style="font-size:48px;margin-bottom:16px">🔷</div>
+          <div style="font-size:48px;margin-bottom:16px"><i class="fa-solid fa-circle-dot"></i></div>
           <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:6px">No WordPress installations found</div>
           <div style="font-size:13px;margin-bottom:20px">Install WordPress or place an existing site in your webroot and click Scan</div>
           <button class="btn btn-primary" @click="openInstallModal()">+ Install WordPress</button>
@@ -1129,12 +1130,12 @@
               <!-- Card thumbnail -->
               <div style="height:90px;background:linear-gradient(135deg,var(--bg-hover),var(--bg-raised));display:flex;align-items:center;justify-content:center;position:relative">
                 <div style="text-align:center">
-                  <div style="width:38px;height:38px;background:var(--bg-card);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 5px;box-shadow:0 1px 4px rgba(0,0,0,.12);font-size:22px">🔷</div>
+                  <div style="width:38px;height:38px;background:var(--bg-card);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 5px;box-shadow:0 1px 4px rgba(0,0,0,.12);font-size:22px"><i class="fa-solid fa-circle-dot"></i></div>
                   <div style="font-size:10px;color:var(--text-muted)" x-text="site.domain"></div>
                 </div>
                 <!-- Security grade badge -->
                 <div x-show="site.is_staging===false" style="position:absolute;top:8px;left:8px;background:rgba(255,255,255,.92);border-radius:20px;padding:2px 7px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px">
-                  <span>🛡</span>
+                  <span><i class="fa-solid fa-shield"></i></span>
                   <span x-text="site.wp_version!=='—'?'v'+site.wp_version:'Scanning…'" style="color:var(--text-secondary)"></span>
                 </div>
                 <!-- Status badge -->
@@ -1189,7 +1190,7 @@
 
             <!-- Drawer header -->
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0">
-              <div style="width:32px;height:32px;background:linear-gradient(135deg,#e0f7fa,#b2ebf2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🔷</div>
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#e0f7fa,#b2ebf2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0"><i class="fa-solid fa-circle-dot"></i></div>
               <div style="flex:1;overflow:hidden">
                 <div style="font-size:14px;font-weight:700;color:var(--text-primary)" x-text="drawer.site?.domain"></div>
                 <div style="display:flex;align-items:center;gap:5px;margin-top:2px;flex-wrap:wrap">
@@ -1540,7 +1541,7 @@
             <!-- Modal header -->
             <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg-card);z-index:1">
               <div style="display:flex;align-items:center;gap:10px">
-                <span style="font-size:20px">🔷</span>
+                <span style="font-size:20px"><i class="fa-solid fa-circle-dot"></i></span>
                 <div>
                   <div style="font-size:14px;font-weight:700;color:var(--text-primary)">Install WordPress</div>
                   <div style="font-size:11px;color:var(--text-muted)">Full setup: files, database, vhost, SSL</div>
@@ -1718,14 +1719,14 @@
         <div x-show="tab==='projects'">
           <!-- Toolbar -->
           <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
-            <input class="form-input" style="max-width:260px" x-model="search" placeholder="🔍 Search projects...">
+            <input class="form-input" style="max-width:260px" x-model="search" placeholder="<i class="fa-solid fa-magnifying-glass"></i> Search projects...">
             <button class="btn btn-ghost btn-sm" @click="load()">Refresh</button>
             <span style="font-size:12px;color:var(--text-muted)" x-text="projects.length+' project(s)'"></span>
           </div>
 
           <!-- Empty state -->
           <div x-show="!loading && projects.length===0" style="text-align:center;padding:60px 20px">
-            <div style="font-size:48px;margin-bottom:12px">💚</div>
+            <div style="font-size:48px;margin-bottom:12px"><i class="fa-solid fa-heart text-green-500"></i></div>
             <div style="font-size:16px;font-weight:600;margin-bottom:8px">No Node.js projects yet</div>
             <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Deploy your first Node.js or PM2 project</div>
             <button class="btn btn-primary" @click="openAddModal('pm2')">+ Add First Project</button>
@@ -2116,14 +2117,14 @@
         <!-- PROJECTS TAB -->
         <div x-show="tab==='projects'">
           <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
-            <input class="form-input" style="max-width:260px" x-model="search" placeholder="🔍 Search projects...">
+            <input class="form-input" style="max-width:260px" x-model="search" placeholder="<i class="fa-solid fa-magnifying-glass"></i> Search projects...">
             <button class="btn btn-ghost btn-sm" @click="load()">Refresh</button>
             <span style="font-size:12px;color:var(--text-muted)" x-text="projects.length+' project(s)'"></span>
           </div>
 
           <!-- Empty state -->
           <div x-show="!loading && projects.length===0" style="text-align:center;padding:60px 20px">
-            <div style="font-size:48px;margin-bottom:12px">🔵</div>
+            <div style="font-size:48px;margin-bottom:12px"><i class="fa-solid fa-circle text-blue-500"></i></div>
             <div style="font-size:16px;font-weight:600;margin-bottom:8px">No Go projects yet</div>
             <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">Go Project only supports <strong>compiled binary files</strong> — not source code.</div>
             <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Compile your Go app → upload the binary → click Add Project</div>
@@ -2488,7 +2489,7 @@
                 <!-- SSL section -->
                 <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                    <div style="font-size:12px;font-weight:700">🔒 SSL Certificate</div>
+                    <div style="font-size:12px;font-weight:700"><i class="fa-solid fa-lock"></i> SSL Certificate</div>
                     <button class="btn btn-ghost btn-xs" @click="checkSSL()">Check status</button>
                   </div>
                   <div x-show="!editModal.domain" style="font-size:12px;color:var(--text-muted)">Assign a domain above first.</div>
@@ -2578,7 +2579,7 @@
             <template x-for="item in items" :key="item.path">
               <div @click="select(item)" @dblclick="dblclick(item)"
                    :style="'display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:13px;'+(selected===item.path?'background:rgba(99,102,241,.12);':'')">
-                <span x-text="item.type==='dir'?'📁':'📄'"></span>
+                <span x-text="item.type==='dir'?'<i class="fa-solid fa-folder-open"></i>':'<i class="fa-regular fa-file"></i>'"></span>
                 <span x-text="item.name" :style="item.type==='dir'?'color:var(--text)':'color:var(--text-secondary)'"></span>
                 <span x-show="item.type==='dir'" style="margin-left:auto;color:var(--text-muted);font-size:10px">→ open</span>
               </div>
@@ -2630,13 +2631,13 @@
           <div><span style="color:var(--text-muted)">Connections: </span><span style="font-weight:600" x-text="dbInfo.connections"></span></div>
           <div><span style="color:var(--text-muted)">Total Size: </span><span style="font-weight:600" x-text="(dbInfo.total_size_mb||0)+' MB'"></span></div>
           <div style="margin-left:auto;display:flex;gap:6px">
-            <a x-show="activeEngine==='mysql'||activeEngine==='mariadb'" :href="'http://'+location.hostname+':8082'" target="_blank" class="btn btn-ghost btn-sm" style="font-size:11px">🔗 phpMyAdmin</a>
+            <a x-show="activeEngine==='mysql'||activeEngine==='mariadb'" :href="'http://'+location.hostname+':8082'" target="_blank" class="btn btn-ghost btn-sm" style="font-size:11px"><i class="fa-solid fa-link"></i> phpMyAdmin</a>
           </div>
         </div>
 
         <!-- COMBINED TABLE (Databases + Users in one view) -->
         <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
-          <input class="form-input" style="max-width:280px" x-model="searchQuery" placeholder="🔍 Search databases...">
+          <input class="form-input" style="max-width:280px" x-model="searchQuery" placeholder="<i class="fa-solid fa-magnifying-glass"></i> Search databases...">
           <button class="btn btn-ghost btn-sm" @click="load()">Refresh</button>
           <button class="btn btn-primary btn-sm" x-show="isMysql || isPg" @click="showAddUser=true">+ Add User</button>
         </div>
@@ -2736,7 +2737,7 @@
             </div>
             <!-- Change password -->
             <div style="margin-bottom:20px">
-              <div style="font-weight:600;font-size:13px;margin-bottom:10px">🔑 Change Password</div>
+              <div style="font-weight:600;font-size:13px;margin-bottom:10px"><i class="fa-solid fa-key"></i> Change Password</div>
               <div style="display:flex;gap:8px">
                 <input class="form-input" type="password" x-model="newPass" placeholder="New password" style="flex:1">
                 <button class="btn btn-primary btn-sm" @click="changePass(selUser?.user)">Update</button>
@@ -2744,7 +2745,7 @@
             </div>
             <!-- Grant access -->
             <div style="margin-bottom:20px">
-              <div style="font-weight:600;font-size:13px;margin-bottom:10px">🔐 Grant Database Access</div>
+              <div style="font-weight:600;font-size:13px;margin-bottom:10px"><i class="fa-solid fa-circle-dot"></i> Grant Database Access</div>
               <div style="display:flex;gap:8px">
                 <select class="form-input" x-model="grantDb" style="flex:1">
                   <option value="">Select database...</option>
@@ -2868,7 +2869,7 @@
                     <td></td>
                     <td>
                       <span style="cursor:pointer;display:flex;align-items:center;gap:8px" @click="f.type==='dir'?loadDir(f.path):openEditor(f)">
-                        <span x-text="f.type==='dir'?'📁':getIcon(f.name)"></span>
+                        <span x-text="f.type==='dir'?'<i class="fa-solid fa-folder-open"></i>':getIcon(f.name)"></span>
                         <span x-text="f.path" style="font-size:12px;color:var(--accent)"></span>
                       </span>
                     </td>
@@ -2888,7 +2889,7 @@
                     <td><input type="checkbox" :checked="selected.includes(f.path)" @change="toggleSelect(f.path)" style="accent-color:var(--accent)"></td>
                     <td>
                       <span style="cursor:pointer;display:flex;align-items:center;gap:8px" @click="f.type==='dir'?loadDir(f.path):openEditor(f)" @dblclick="f.type==='dir'?loadDir(f.path):openEditor(f)">
-                        <span x-text="f.type==='dir'?'📁':getIcon(f.name)"></span>
+                        <span x-text="f.type==='dir'?'<i class="fa-solid fa-folder-open"></i>':getIcon(f.name)"></span>
                         <span style="font-weight:500" x-text="f.name"></span>
                         <span x-show="f.type!=='dir' && f.size" style="font-size:10px;color:var(--text-muted)" x-text="'('+getLang(f.name)+')'"></span>
                       </span>
@@ -2917,7 +2918,7 @@
             </tbody>
           </table>
           <template x-if="sortedItems.length===0 && searchResults.length===0">
-            <div class="empty-state"><div class="empty-icon">📁</div><div class="empty-text">Empty directory</div></div>
+            <div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div><div class="empty-text">Empty directory</div></div>
           </template>
         </div>
 
@@ -2942,57 +2943,57 @@
         <div x-show="ctxMenu.show" @click.outside="ctxMenu.show=false" class="ctx-menu"
              :style="'left:'+ctxMenu.x+'px;top:'+ctxMenu.y+'px'">
           <div class="ctx-item" @click="ctxOpen()">
-            <span class="ctx-icon">📂</span> Open
+            <span class="ctx-icon"><i class="fa-solid fa-circle-dot"></i></span> Open
           </div>
           <div class="ctx-item" @click="ctxEdit()" x-show="ctxTarget?.type==='file'">
             <span class="ctx-icon">✏️</span> Edit
           </div>
           <div class="ctx-sep"></div>
           <div class="ctx-item" @click="ctxCopy()">
-            <span class="ctx-icon">📋</span> Copy
+            <span class="ctx-icon"><i class="fa-solid fa-clipboard"></i></span> Copy
           </div>
           <div class="ctx-item" @click="ctxCut()">
             <span class="ctx-icon">✂️</span> Cut
           </div>
           <div class="ctx-item" @click="pasteHere()" x-show="clipboard">
-            <span class="ctx-icon">📌</span> Paste
+            <span class="ctx-icon"><i class="fa-solid fa-thumbtack"></i></span> Paste
           </div>
           <div class="ctx-sep"></div>
           <div class="ctx-item" @click="ctxRename()">
-            <span class="ctx-icon">🖊</span> Rename
+            <span class="ctx-icon"><i class="fa-solid fa-pen"></i></span> Rename
           </div>
           <div class="ctx-item" @click="ctxChmod()">
-            <span class="ctx-icon">🔐</span> Permissions
+            <span class="ctx-icon"><i class="fa-solid fa-circle-dot"></i></span> Permissions
           </div>
           <div style="position:relative" @mouseenter="ctxMenu.showFmt=true" @mouseleave="ctxMenu.showFmt=false">
             <div class="ctx-item">
-              <span class="ctx-icon">📦</span> Compress
+              <span class="ctx-icon"><i class="fa-solid fa-box"></i></span> Compress
               <span style="margin-left:auto;font-size:10px;opacity:.6">▶</span>
             </div>
             <div x-show="ctxMenu.showFmt" style="position:absolute;left:100%;top:-4px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:4px;min-width:170px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.4)">
               <div class="ctx-item" @click="compressItem(ctxTarget,'zip');ctxMenu.show=false;ctxMenu.showFmt=false">
-                <span class="ctx-icon">🗜</span> ZIP (.zip)
+                <span class="ctx-icon"><i class="fa-solid fa-compress"></i></span> ZIP (.zip)
               </div>
               <div class="ctx-item" @click="compressItem(ctxTarget,'tar.gz');ctxMenu.show=false;ctxMenu.showFmt=false">
-                <span class="ctx-icon">📦</span> TAR.GZ (.tar.gz)
+                <span class="ctx-icon"><i class="fa-solid fa-box"></i></span> TAR.GZ (.tar.gz)
               </div>
             </div>
           </div>
           <div class="ctx-item" @click="ctxExtract()" x-show="ctxTarget?.name?.match(/\.(zip|tar\.gz|tar|gz|rar)$/)">
-            <span class="ctx-icon">📂</span> Extract here
+            <span class="ctx-icon"><i class="fa-solid fa-circle-dot"></i></span> Extract here
           </div>
           <div class="ctx-item" @click="copyPath(ctxTarget)">
-            <span class="ctx-icon">🔗</span> Copy Path
+            <span class="ctx-icon"><i class="fa-solid fa-link"></i></span> Copy Path
           </div>
           <div class="ctx-item" @click="ctxProps()">
             <span class="ctx-icon">ℹ️</span> Properties
           </div>
           <div class="ctx-item" @click="ctxScan()">
-            <span class="ctx-icon">🦠</span> Scan for Viruses
+            <span class="ctx-icon"><i class="fa-solid fa-virus"></i></span> Scan for Viruses
           </div>
           <div class="ctx-sep"></div>
           <div class="ctx-item ctx-danger" @click="ctxDelete()">
-            <span class="ctx-icon">🗑️</span> Delete
+            <span class="ctx-icon"><i class="fa-solid fa-trash"></i>️</span> Delete
           </div>
         </div>
 
@@ -3001,7 +3002,7 @@
           <div class="modal" style="max-width:600px">
             <div class="modal-hd">
               <div>
-                <div class="modal-title">🦠 Virus Scan Result</div>
+                <div class="modal-title"><i class="fa-solid fa-virus"></i> Virus Scan Result</div>
                 <div style="font-size:11px;color:var(--text-muted)" x-text="scanTarget"></div>
               </div>
               <button class="modal-close" @click="showScanResult=false">×</button>
@@ -3087,7 +3088,7 @@
                        @click="openTreeFile(node)">
                     <span x-show="node.type==='dir'" style="font-size:9px;width:10px;flex-shrink:0;display:inline-block" x-text="editorTreeExpanded[node.path]?'▾':'▸'"></span>
                     <span x-show="node.type!=='dir'" style="width:10px;flex-shrink:0;display:inline-block"></span>
-                    <span x-text="node.type==='dir'?'📁':getIcon(node.name)" style="flex-shrink:0"></span>
+                    <span x-text="node.type==='dir'?'<i class="fa-solid fa-folder-open"></i>':getIcon(node.name)" style="flex-shrink:0"></span>
                     <span x-text="node.name"></span>
                   </div>
                 </template>
@@ -3195,7 +3196,7 @@
                 <tr :style="m.installed?'background:rgba(16,185,129,.03)':''">
                   <!-- Icon -->
                   <td style="text-align:center;padding:10px 8px">
-                    <img :src="m.icon" :alt="m.name" style="width:28px;height:28px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span style="display:none;font-size:22px">📦</span>
+                    <img :src="m.icon" :alt="m.name" style="width:28px;height:28px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span style="display:none;font-size:22px"><i class="fa-solid fa-box"></i></span>
                   </td>
 
                   <!-- Name + Category -->
@@ -4131,7 +4132,7 @@
                     <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:16px;text-transform:uppercase;letter-spacing:.4px">Roundcube Webmail</div>
                     <!-- Access URL card -->
                     <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:14px">
-                      <span style="font-size:28px">📨</span>
+                      <span style="font-size:28px"><i class="fa-solid fa-circle-dot"></i></span>
                       <div style="flex:1">
                         <div style="font-size:13px;font-weight:600;margin-bottom:4px">Webmail Access URL</div>
                         <div style="font-size:12px;color:var(--text-muted)" x-text="'http://YOUR-IP:' + (settingsModal.rcData?.port||'8083')"></div>
@@ -4355,7 +4356,7 @@
                   <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px">Configure BIND9 as an internal/private DNS resolver for your network</div>
                   <div style="display:grid;gap:14px;max-width:600px">
                     <div style="padding:14px;background:var(--bg-raised);border:1px solid var(--border);border-radius:8px">
-                      <div style="font-weight:600;font-size:13px;margin-bottom:8px">🔒 Internal Resolver</div>
+                      <div style="font-weight:600;font-size:13px;margin-bottom:8px"><i class="fa-solid fa-lock"></i> Internal Resolver</div>
                       <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Allow only internal networks to use this DNS server for recursive queries</div>
                       <div class="form-group"><label class="form-label">Allow Query Networks (one per line)</label>
                         <textarea class="form-input" style="min-height:80px;font-family:var(--font-mono);font-size:12px"
@@ -4369,7 +4370,7 @@
                       </button>
                     </div>
                     <div style="padding:14px;background:var(--bg-raised);border:1px solid var(--border);border-radius:8px">
-                      <div style="font-weight:600;font-size:13px;margin-bottom:8px">🌐 Forwarders</div>
+                      <div style="font-weight:600;font-size:13px;margin-bottom:8px"><i class="fa-solid fa-globe"></i> Forwarders</div>
                       <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Forward unresolved queries to upstream DNS servers</div>
                       <div class="form-group"><label class="form-label">Upstream DNS Servers</label>
                         <input class="form-input" x-model="settingsModal.dnsForwarders" placeholder="8.8.8.8; 1.1.1.1;">
@@ -4581,7 +4582,7 @@
 
                   <!-- Export certs for portability -->
                   <div style="padding:12px 14px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.15);border-radius:8px;margin-bottom:16px">
-                    <div style="font-weight:600;font-size:12px;color:var(--green);margin-bottom:6px">🔒 SSL Portability</div>
+                    <div style="font-weight:600;font-size:12px;color:var(--green);margin-bottom:6px"><i class="fa-solid fa-lock"></i> SSL Portability</div>
                     <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">Export Caddy-managed certificates to <code style="background:var(--bg-raised);padding:1px 4px;border-radius:3px">/etc/ssl/errormodz/</code> so they remain usable if you switch to Nginx or Apache.</div>
                     <button class="btn btn-sm" style="background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)"
                             @click="post('/api/modules/caddy/settings',{action:'export_certs'}).then(r=>toast(r.ok?'Certs exported to /etc/ssl/errormodz/':'Failed: '+(r.error||''),r.ok?'success':'error'))">
@@ -4639,7 +4640,7 @@
                     </table>
                     <template x-if="!settingsModal.ftpUsers?.length">
                       <div class="empty-state" style="padding:24px">
-                        <div class="empty-icon">📂</div>
+                        <div class="empty-icon"><i class="fa-solid fa-circle-dot"></i></div>
                         <div class="empty-text">No FTP accounts yet</div>
                       </div>
                     </template>
@@ -4693,7 +4694,7 @@
                         </template>
                       </tbody>
                     </table>
-                    <div x-show="!f2bWebsiteJails.length" class="empty-state" style="padding:24px"><div class="empty-icon">🛡</div><div class="empty-text">No jails configured</div></div>
+                    <div x-show="!f2bWebsiteJails.length" class="empty-state" style="padding:24px"><div class="empty-icon"><i class="fa-solid fa-shield"></i></div><div class="empty-text">No jails configured</div></div>
                   </div>
 
                   <!-- Create form -->
@@ -4772,7 +4773,7 @@
                         </template>
                       </tbody>
                     </table>
-                    <div x-show="!f2bServerJails.length" class="empty-state" style="padding:24px"><div class="empty-icon">🛡</div><div class="empty-text">No jails configured</div></div>
+                    <div x-show="!f2bServerJails.length" class="empty-state" style="padding:24px"><div class="empty-icon"><i class="fa-solid fa-shield"></i></div><div class="empty-text">No jails configured</div></div>
                   </div>
 
                   <!-- Create form -->
@@ -4929,7 +4930,7 @@
               </template>
             </tbody>
           </table>
-          <template x-if="rules.length===0"><div class="empty-state"><div class="empty-icon">🛡</div><div class="empty-text">No rules configured</div></div></template>
+          <template x-if="rules.length===0"><div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-shield"></i></div><div class="empty-text">No rules configured</div></div></template>
         </div>
         <!-- Add rule modal -->
         <div class="modal-overlay" x-show="showAdd" @click.self="showAdd=false">
@@ -4978,7 +4979,7 @@
         <div x-show="tab==='local'">
         <div class="grid-3" style="margin-bottom:16px">
           <div class="card">
-            <div class="card-hd"><div class="card-title">📦 Full Backup</div></div>
+            <div class="card-hd"><div class="card-title"><i class="fa-solid fa-box"></i> Full Backup</div></div>
             <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;min-height:48px">Backs up all websites, nginx/caddy configs, and the backups folder itself in one archive.</div>
             <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" @click="createBackup('full','')" :disabled="creating==='full'">
               <span x-show="creating==='full'" class="loading-spinner" style="width:12px;height:12px;border-width:2px"></span>
@@ -4986,7 +4987,7 @@
             </button>
           </div>
           <div class="card">
-            <div class="card-hd"><div class="card-title">💾 Website Backup</div></div>
+            <div class="card-hd"><div class="card-title"><i class="fa-solid fa-floppy-disk"></i> Website Backup</div></div>
             <div class="form-group"><label class="form-label">Domain</label>
               <select class="form-input" x-model="form.website.domain">
                 <option value="">— Select website —</option>
@@ -4999,7 +5000,7 @@
             </button>
           </div>
           <div class="card">
-            <div class="card-hd"><div class="card-title">🗄 Database Backup</div></div>
+            <div class="card-hd"><div class="card-title"><i class="fa-solid fa-database"></i> Database Backup</div></div>
             <div class="form-group"><label class="form-label">Database</label>
               <select class="form-input" x-model="form.db.name">
                 <option value="">— Select database —</option>
@@ -5033,7 +5034,7 @@
               </template>
             </tbody>
           </table>
-          <template x-if="backups.length===0"><div class="empty-state"><div class="empty-icon">💾</div><div class="empty-text">No backups yet</div></div></template>
+          <template x-if="backups.length===0"><div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-floppy-disk"></i></div><div class="empty-text">No backups yet</div></div></template>
         </div>
         </div>
         <div x-show="tab==='cloud'">
@@ -5224,7 +5225,7 @@
       <!-- FTP -->
       <div x-show="page==='ftp'" x-data="ftpPage()">
         <div class="page-header"><div><div class="page-title">FTP / SFTP</div><div class="page-sub">Pure-FTPd account management</div></div><button class="btn btn-primary btn-sm" @click="showAdd=true" x-show="ftpStatus.installed">+ Add Account</button></div>
-        <template x-if="!ftpStatus.installed"><div class="card" style="text-align:center;padding:40px"><div style="font-size:40px;margin-bottom:12px">📂</div><div style="font-size:14px;font-weight:600;margin-bottom:8px">Pure-FTPd Not Installed</div><button class="btn btn-primary" @click="$dispatch('nav',{page:'modules'})">Install via Modules</button></div></template>
+        <template x-if="!ftpStatus.installed"><div class="card" style="text-align:center;padding:40px"><div style="font-size:40px;margin-bottom:12px"><i class="fa-solid fa-circle-dot"></i></div><div style="font-size:14px;font-weight:600;margin-bottom:8px">Pure-FTPd Not Installed</div><button class="btn btn-primary" @click="$dispatch('nav',{page:'modules'})">Install via Modules</button></div></template>
         <div x-show="ftpStatus.installed">
           <div class="card" style="padding:0;overflow:hidden">
             <table class="data-table">
@@ -5236,7 +5237,7 @@
                 </template>
               </tbody>
             </table>
-            <template x-if="accounts.length===0"><div class="empty-state"><div class="empty-icon">📂</div><div class="empty-text">No FTP accounts</div></div></template>
+            <template x-if="accounts.length===0"><div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-circle-dot"></i></div><div class="empty-text">No FTP accounts</div></div></template>
           </div>
         </div>
         <div class="modal-overlay" x-show="showAdd" @click.self="showAdd=false"><div class="modal" style="max-width:420px"><div class="modal-hd"><div class="modal-title">Add FTP Account</div><button class="modal-close" @click="showAdd=false">×</button></div><div class="form-group"><label class="form-label">Username</label><input class="form-input" x-model="form.user"></div><div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" x-model="form.password"></div><div class="form-group"><label class="form-label">Home Directory</label><input class="form-input" x-model="form.home" placeholder="/www/wwwroot/domain.com"></div><div class="modal-ft"><button class="btn btn-ghost" @click="showAdd=false">Cancel</button><button class="btn btn-primary" @click="create()">Create</button></div></div></div>
@@ -5269,7 +5270,7 @@
               </template>
             </tbody>
           </table>
-          <template x-if="jobs.length===0"><div class="empty-state" style="padding:40px"><div class="empty-icon">⏱</div><div style="font-size:15px;font-weight:600;margin-bottom:6px">No scheduled tasks</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Automate backups, SSL renewals, cleanups and more</div><button class="btn btn-primary" @click="openAdd()">+ Add Your First Task</button></div></template>
+          <template x-if="jobs.length===0"><div class="empty-state" style="padding:40px"><div class="empty-icon"><i class="fa-solid fa-clock"></i></div><div style="font-size:15px;font-weight:600;margin-bottom:6px">No scheduled tasks</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Automate backups, SSL renewals, cleanups and more</div><button class="btn btn-primary" @click="openAdd()">+ Add Your First Task</button></div></template>
         </div>
         <!-- Add/Edit Modal -->
         <div class="modal-overlay" x-show="showForm" @click.self="showForm=false">
@@ -5468,7 +5469,7 @@
           <!-- Step 1: SSH Key check -->
           <div class="card" style="margin-bottom:12px">
             <div class="card-hd">
-              <div class="card-title">🔑 SSH Key Status</div>
+              <div class="card-title"><i class="fa-solid fa-key"></i> SSH Key Status</div>
               <span :class="ssh.keys_exist?'badge badge-green':'badge badge-red'"
                     x-text="ssh.keys_exist?'Keys found':'No keys found'"></span>
             </div>
@@ -5589,8 +5590,8 @@
           </div>
         </div>
         <div x-show="tab==='fail2ban'" style="margin-top:14px">
-          <template x-if="f2bAvailable===false"><div class="card"><div class="empty-state"><div class="empty-icon">🛡</div><div class="empty-text">Fail2ban not running — install via Modules</div></div></div></template>
-          <template x-if="f2bAvailable && (!f2bJails||!f2bJails.length)"><div class="card"><div class="empty-state"><div class="empty-icon">🛡</div><div class="empty-text">Fail2ban is running — no jails configured yet</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Add Website or Server Protection jails from App Store → Fail2ban → Settings</div></div></div></template>
+          <template x-if="f2bAvailable===false"><div class="card"><div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-shield"></i></div><div class="empty-text">Fail2ban not running — install via Modules</div></div></div></template>
+          <template x-if="f2bAvailable && (!f2bJails||!f2bJails.length)"><div class="card"><div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-shield"></i></div><div class="empty-text">Fail2ban is running — no jails configured yet</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Add Website or Server Protection jails from App Store → Fail2ban → Settings</div></div></div></template>
           <template x-for="jail in f2bJails" :key="jail.name">
             <div class="card" style="margin-bottom:10px"><div class="card-hd"><div><div class="card-title" x-text="jail.name"></div><div style="font-size:11px;color:var(--text-muted)">Banned: <span x-text="jail.currently"></span></div></div></div>
               <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
@@ -5605,7 +5606,7 @@
           <!-- Status card -->
           <div class="card" style="margin-bottom:12px">
             <div class="card-hd">
-              <div class="card-title">🔥 ModSecurity WAF</div>
+              <div class="card-title"><i class="fa-solid fa-fire"></i> ModSecurity WAF</div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span x-show="modsec.installed && modsec.state==='On'"    class="badge badge-green">● Blocking</span>
                 <span x-show="modsec.installed && modsec.state==='DetectionOnly'" class="badge badge-yellow">◑ Detection Only</span>
@@ -5848,7 +5849,7 @@
               </div>
             </div>
             <div class="card">
-              <div class="card-hd"><div class="card-title">🔌 TCP / Stream Load Balancer</div><span :class="'badge badge-'+(tcpLb.configured?'green':'gray')" x-text="tcpLb.configured?'Active':'Not Configured'"></span></div>
+              <div class="card-hd"><div class="card-title"><i class="fa-solid fa-plug"></i> TCP / Stream Load Balancer</div><span :class="'badge badge-'+(tcpLb.configured?'green':'gray')" x-text="tcpLb.configured?'Active':'Not Configured'"></span></div>
               <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">Load-balances raw TCP connections — for non-HTTP services like databases, game servers, custom protocols, or MQTT brokers. Works at the connection level, not the request level.</div>
               <div class="form-row form-row-2">
                 <div class="form-group"><label class="form-label">Listen Port</label><input class="form-input" x-model="tcpLb.port" placeholder="9000"></div>
@@ -5882,7 +5883,7 @@
           <div x-show="lbTab==='health'">
             <div class="card">
               <div class="card-hd">
-                <div class="card-title">💓 Active Health Checks</div>
+                <div class="card-title"><i class="fa-solid fa-heart-pulse"></i> Active Health Checks</div>
                 <div style="display:flex;align-items:center;gap:8px">
                   <span :class="'badge badge-'+(health.service_active?'green':'gray')" x-text="health.service_active?'Running':'Stopped'"></span>
                 </div>
@@ -5958,7 +5959,7 @@
 
         <!-- Not installed empty state -->
         <div x-show="!loading && !modsecInstalled" class="empty-state">
-          <div class="empty-icon">🛡</div>
+          <div class="empty-icon"><i class="fa-solid fa-shield"></i></div>
           <div class="empty-text">ModSecurity isn't installed yet</div>
           <button class="btn btn-primary btn-sm" style="margin-top:10px" @click="go('modules')">Install from App Store</button>
         </div>
@@ -6143,7 +6144,7 @@
         <!-- NOT INSTALLED -->
         <template x-if="!loading && !status.installed">
           <div class="card" style="text-align:center;padding:52px 32px">
-            <div style="font-size:52px;margin-bottom:16px">🐋</div>
+            <div style="font-size:52px;margin-bottom:16px"><i class="fa-solid fa-fish"></i></div>
             <div style="font-size:20px;font-weight:700;margin-bottom:8px">Docker Not Installed</div>
             <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px;max-width:480px;margin:0 auto 24px">
               Install Docker CE via the <strong>Modules</strong> page to enable container management and one-click application deployment.
@@ -6179,16 +6180,16 @@
 
             <!-- Tabs -->
             <div class="tabs" style="margin-bottom:16px">
-              <div class="tab" :class="{active:tab==='catalog'}" @click="tab='catalog'">🐳 Image Catalog</div>
-              <div class="tab" :class="{active:tab==='containers'}" @click="tab='containers';loadContainers()">📦 Containers (<span x-text="containers.length"></span>)</div>
-              <div class="tab" :class="{active:tab==='images'}" @click="tab='images';loadImages()">🖼 Local Images (<span x-text="images.length"></span>)</div>
-              <div class="tab" :class="{active:tab==='volumes'}" @click="tab='volumes';loadVolumes()">💾 Volumes</div>
+              <div class="tab" :class="{active:tab==='catalog'}" @click="tab='catalog'"><i class="fa-brands fa-docker"></i> Image Catalog</div>
+              <div class="tab" :class="{active:tab==='containers'}" @click="tab='containers';loadContainers()"><i class="fa-solid fa-box"></i> Containers (<span x-text="containers.length"></span>)</div>
+              <div class="tab" :class="{active:tab==='images'}" @click="tab='images';loadImages()"><i class="fa-regular fa-image"></i> Local Images (<span x-text="images.length"></span>)</div>
+              <div class="tab" :class="{active:tab==='volumes'}" @click="tab='volumes';loadVolumes()"><i class="fa-solid fa-floppy-disk"></i> Volumes</div>
             </div>
 
             <!-- CATALOG -->
             <div x-show="tab==='catalog'">
               <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
-                <input class="form-input" style="flex:1;min-width:180px;max-width:300px" x-model="search" placeholder="🔍 Search images...">
+                <input class="form-input" style="flex:1;min-width:180px;max-width:300px" x-model="search" placeholder="<i class="fa-solid fa-magnifying-glass"></i> Search images...">
                 <div style="display:flex;gap:5px;flex-wrap:wrap">
                   <template x-for="cat in categories" :key="cat">
                     <button :class="'btn btn-xs '+(catalogFilter===cat?'btn-primary':'btn-ghost')" @click="catalogFilter=cat" x-text="cat"></button>
@@ -6198,10 +6199,10 @@
 
               <!-- DHI callout -->
               <div style="background:linear-gradient(135deg,rgba(88,101,242,.12),rgba(6,182,212,.08));border:1px solid rgba(88,101,242,.25);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-                <span style="font-size:24px">🔒</span>
+                <span style="font-size:24px"><i class="fa-solid fa-lock"></i></span>
                 <div>
                   <div style="font-weight:600;font-size:13px;margin-bottom:2px">Docker Hardened Images (DHI) <span style="background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);font-size:10px;padding:1px 7px;border-radius:10px;margin-left:6px">Zero-CVE</span></div>
-                  <div style="font-size:11px;color:var(--text-secondary)">Images marked <strong>🔒 Hardened</strong> are built with zero-known CVEs, signed provenance and full SBOM — production-grade security.</div>
+                  <div style="font-size:11px;color:var(--text-secondary)">Images marked <strong><i class="fa-solid fa-lock"></i> Hardened</strong> are built with zero-known CVEs, signed provenance and full SBOM — production-grade security.</div>
                 </div>
               </div>
 
@@ -6217,7 +6218,7 @@
                       <div style="flex:1;min-width:0">
                         <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
                           <span style="font-weight:700;font-size:13px" x-text="img.name"></span>
-                          <span x-show="img.hardened" style="font-size:9px;background:rgba(88,101,242,.15);color:#7c8af7;border:1px solid rgba(88,101,242,.3);padding:1px 6px;border-radius:8px">🔒 DHI</span>
+                          <span x-show="img.hardened" style="font-size:9px;background:rgba(88,101,242,.15);color:#7c8af7;border:1px solid rgba(88,101,242,.3);padding:1px 6px;border-radius:8px"><i class="fa-solid fa-lock"></i> DHI</span>
                           <span x-show="isInstalled(img)" class="badge badge-green" style="font-size:9px">✓ Local</span>
                         </div>
                         <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);margin-top:2px" x-text="img.image+':'+img.tag"></div>
@@ -6245,7 +6246,7 @@
             <!-- CONTAINERS -->
             <div x-show="tab==='containers'">
               <template x-if="containers.length===0">
-                <div class="empty-state"><div class="empty-icon">📦</div><div class="empty-text">No containers. Deploy from the Catalog tab.</div></div>
+                <div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-box"></i></div><div class="empty-text">No containers. Deploy from the Catalog tab.</div></div>
               </template>
               <div class="card" style="padding:0;overflow:hidden" x-show="containers.length>0">
                 <table class="data-table">
@@ -6283,7 +6284,7 @@
 
             <!-- LOCAL IMAGES -->
             <div x-show="tab==='images'">
-              <template x-if="images.length===0"><div class="empty-state"><div class="empty-icon">🖼</div><div class="empty-text">No images pulled yet. Deploy from the Catalog.</div></div></template>
+              <template x-if="images.length===0"><div class="empty-state"><div class="empty-icon"><i class="fa-regular fa-image"></i></div><div class="empty-text">No images pulled yet. Deploy from the Catalog.</div></div></template>
               <div class="card" style="padding:0;overflow:hidden" x-show="images.length>0">
                 <table class="data-table">
                   <thead><tr><th>Repository</th><th>Tag</th><th>Size</th><th>Created</th><th>Actions</th></tr></thead>
@@ -6396,7 +6397,7 @@
               </template>
             </div>
             <div style="font-size:11px;color:var(--text-muted);background:var(--bg-raised);padding:8px 10px;border-radius:6px;margin-bottom:14px">
-              💡 ERROR MODZ runs <code>docker pull</code> then <code>docker run -d</code> with the config above. Host paths are created automatically.
+              <i class="fa-solid fa-lightbulb"></i> ERROR MODZ runs <code>docker pull</code> then <code>docker run -d</code> with the config above. Host paths are created automatically.
             </div>
             <div class="modal-ft">
               <button class="btn btn-ghost" @click="showRun=false">Cancel</button>
@@ -6473,7 +6474,7 @@
         <!-- Not installed state -->
         <template x-if="!status.installed">
           <div class="card" style="text-align:center;padding:48px 32px">
-            <div style="font-size:52px;margin-bottom:16px">🟩</div>
+            <div style="font-size:52px;margin-bottom:16px"><i class="fa-solid fa-circle-dot"></i></div>
             <div style="font-size:20px;font-weight:700;margin-bottom:8px">Caddy Not Installed</div>
             <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;max-width:520px;margin-left:auto;margin-right:auto">
               Caddy is a modern web server with <strong>automatic HTTPS</strong> — it provisions and renews Let's Encrypt certificates automatically with zero configuration.
@@ -6513,7 +6514,7 @@
             <!-- Key feature callouts -->
             <div class="grid-4" style="margin-bottom:16px">
               <div class="card-sm" style="text-align:center">
-                <div style="font-size:22px;margin-bottom:4px">🔒</div>
+                <div style="font-size:22px;margin-bottom:4px"><i class="fa-solid fa-lock"></i></div>
                 <div style="font-size:12px;font-weight:600">Auto HTTPS</div>
                 <div style="font-size:11px;color:var(--text-muted)">Let's Encrypt + ZeroSSL</div>
               </div>
@@ -6523,12 +6524,12 @@
                 <div style="font-size:11px;color:var(--text-muted)">QUIC protocol support</div>
               </div>
               <div class="card-sm" style="text-align:center">
-                <div style="font-size:22px;margin-bottom:4px">🔀</div>
+                <div style="font-size:22px;margin-bottom:4px"><i class="fa-solid fa-shuffle"></i></div>
                 <div style="font-size:12px;font-weight:600">Reverse Proxy</div>
                 <div style="font-size:11px;color:var(--text-muted)">With load balancing</div>
               </div>
               <div class="card-sm" style="text-align:center">
-                <div style="font-size:22px;margin-bottom:4px">🐘</div>
+                <div style="font-size:22px;margin-bottom:4px"><i class="fa-brands fa-php"></i></div>
                 <div style="font-size:12px;font-weight:600">PHP-FPM</div>
                 <div style="font-size:11px;color:var(--text-muted)">FastCGI built-in</div>
               </div>
@@ -6540,7 +6541,7 @@
                 <div class="card-title">Sites (<span x-text="sites.length"></span>)</div>
               </div>
               <template x-if="sites.length===0">
-                <div class="empty-state"><div class="empty-icon">🟩</div><div class="empty-text">No sites configured. Click "+ Add Site" to create one.</div></div>
+                <div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-circle-dot"></i></div><div class="empty-text">No sites configured. Click "+ Add Site" to create one.</div></div>
               </template>
               <table class="data-table" x-show="sites.length>0">
                 <thead><tr><th>Domain</th><th>Path</th><th>Type</th><th>PHP</th><th>SSL</th><th>Actions</th></tr></thead>
@@ -6554,7 +6555,7 @@
                       </td>
                       <td><span class="badge badge-gray" x-show="s.php && s.php!=='Static'" x-text="s.php"></span></td>
                       <td>
-                        <span class="badge badge-green" x-show="s.ssl" @click="sslInfo(s.domain)" style="cursor:pointer" title="Click for cert info">🔒 Auto</span>
+                        <span class="badge badge-green" x-show="s.ssl" @click="sslInfo(s.domain)" style="cursor:pointer" title="Click for cert info"><i class="fa-solid fa-lock"></i> Auto</span>
                         <span class="badge badge-gray" x-show="!s.ssl">No SSL</span>
                       </td>
                       <td>
@@ -6583,7 +6584,7 @@
             <div class="modal-hd"><div class="modal-title">Add Caddy Site</div><button class="modal-close" @click="showAdd=false">×</button></div>
 
             <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-secondary)">
-              🔒 Caddy will <strong>automatically provision a free SSL certificate</strong> for your domain. Just make sure the domain's DNS points to this server.
+              <i class="fa-solid fa-lock"></i> Caddy will <strong>automatically provision a free SSL certificate</strong> for your domain. Just make sure the domain's DNS points to this server.
             </div>
 
             <div class="form-group">
@@ -6595,7 +6596,7 @@
             <div class="form-group">
               <label class="form-label">Site Type</label>
               <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
-                <template x-for="t in [{id:'static',icon:'📄',label:'Static'},{id:'php',icon:'🐘',label:'PHP'},{id:'proxy',icon:'🔀',label:'Proxy'},{id:'nodejs',icon:'🟢',label:'Node.js'}]" :key="t.id">
+                <template x-for="t in [{id:'static',icon:'<i class="fa-regular fa-file"></i>',label:'Static'},{id:'php',icon:'<i class="fa-brands fa-php"></i>',label:'PHP'},{id:'proxy',icon:'<i class="fa-solid fa-shuffle"></i>',label:'Proxy'},{id:'nodejs',icon:'<i class="fa-solid fa-circle text-green-500"></i>',label:'Node.js'}]" :key="t.id">
                   <div style="padding:10px 6px;text-align:center;border-radius:8px;cursor:pointer;border:2px solid;transition:.12s;font-size:12px"
                        :style="form.type===t.id?'border-color:var(--accent);background:var(--bg-hover);color:var(--accent)':{borderColor:'var(--border)',background:'var(--bg-raised)'}"
                        @click="form.type=t.id">
@@ -6651,7 +6652,7 @@
               <button class="modal-close" @click="showCaddyfile=false">×</button>
             </div>
             <div style="background:rgba(88,101,242,.08);border:1px solid rgba(88,101,242,.2);border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--text-secondary)">
-              📖 The Caddyfile is validated before saving. If validation fails, the previous config is restored automatically.
+              <i class="fa-solid fa-book"></i> The Caddyfile is validated before saving. If validation fails, the previous config is restored automatically.
             </div>
             <textarea class="form-input" style="min-height:400px;font-family:var(--font-mono);font-size:12px;line-height:1.6"
                       x-model="caddyfileContent"
@@ -6673,7 +6674,7 @@
             <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0">
               <div style="flex:1">
                 <div style="font-weight:700;font-size:15px" x-text="drawerSite?.domain"></div>
-                <div style="font-size:11px;color:var(--accent);margin-top:2px">🔒 SSL auto-managed by Caddy</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:2px"><i class="fa-solid fa-lock"></i> SSL auto-managed by Caddy</div>
               </div>
               <button class="modal-close" @click="drawerShow=false" style="font-size:20px">×</button>
             </div>
@@ -6906,7 +6907,7 @@
             <div class="grid-2" style="margin-bottom:16px">
               <!-- Cache settings -->
               <div class="card">
-                <div class="card-hd"><div class="card-title">🔧 Zone Settings</div></div>
+                <div class="card-hd"><div class="card-title"><i class="fa-solid fa-wrench"></i> Zone Settings</div></div>
 
                 <div style="display:flex;flex-direction:column;gap:12px">
                   <label class="form-check" style="justify-content:space-between">
@@ -6961,7 +6962,7 @@
 
               <!-- Cache Purge -->
               <div class="card">
-                <div class="card-hd"><div class="card-title">🗑 Cache Purge</div></div>
+                <div class="card-hd"><div class="card-title"><i class="fa-solid fa-trash"></i> Cache Purge</div></div>
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">
                   Purge cached files from Cloudflare edge servers. Leave URL empty to purge everything.
                 </div>
@@ -6977,7 +6978,7 @@
                 </div>
 
                 <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:14px">
-                  <div class="card-hd" style="margin-bottom:10px"><div class="card-title">🌐 DNS Records</div>
+                  <div class="card-hd" style="margin-bottom:10px"><div class="card-title"><i class="fa-solid fa-globe"></i> DNS Records</div>
                     <button class="btn btn-ghost btn-xs" @click="loadCfDns()">Load</button>
                   </div>
                   <template x-if="cf.dns.length===0">
@@ -6989,7 +6990,7 @@
                         <span class="badge badge-blue" style="font-size:9px;min-width:30px;text-align:center" x-text="r.type"></span>
                         <span style="font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis" x-text="r.name"></span>
                         <span style="color:var(--text-muted);flex:1;overflow:hidden;text-overflow:ellipsis" x-text="r.content"></span>
-                        <span x-show="r.proxied" style="color:var(--orange);font-size:10px">🔶 Proxied</span>
+                        <span x-show="r.proxied" style="color:var(--orange);font-size:10px"><i class="fa-solid fa-circle-dot"></i> Proxied</span>
                       </div>
                     </template>
                   </div>
@@ -7030,7 +7031,7 @@
             </div>
 
             <div class="card" style="max-width:500px">
-              <div class="card-hd"><div class="card-title">🗑 Purge Cache</div></div>
+              <div class="card-hd"><div class="card-title"><i class="fa-solid fa-trash"></i> Purge Cache</div></div>
               <div class="form-group">
                 <label class="form-label">Purge Specific URL (optional)</label>
                 <input class="form-input" x-model="bunny.purgeUrl" placeholder="https://yourzone.b-cdn.net/style.css">
@@ -7045,7 +7046,7 @@
           <div x-show="selectedProvider && selectedProvider.id!=='cloudflare' && selectedProvider.id!=='bunnycdn'">
             <div class="grid-2">
               <div class="card">
-                <div class="card-hd"><div class="card-title">🔗 Connection Test</div></div>
+                <div class="card-hd"><div class="card-title"><i class="fa-solid fa-link"></i> Connection Test</div></div>
                 <div class="form-group">
                   <label class="form-label">Test URL</label>
                   <input class="form-input" x-model="generic.testUrl" placeholder="https://yourdomain.com">
@@ -7089,7 +7090,7 @@
             </div>
 
             <div style="margin-top:14px;background:var(--bg-raised);border-radius:8px;padding:14px;font-size:12px;color:var(--text-muted)">
-              <div style="font-weight:600;margin-bottom:8px;color:var(--text-secondary)">📖 Setup Guide for <span x-text="selectedProvider?.name"></span></div>
+              <div style="font-weight:600;margin-bottom:8px;color:var(--text-secondary)"><i class="fa-solid fa-book"></i> Setup Guide for <span x-text="selectedProvider?.name"></span></div>
               <div style="line-height:1.8">
                 1. Create a pull zone in your <a :href="selectedProvider?.setup_url" target="_blank" style="color:var(--accent)" x-text="selectedProvider?.name+' dashboard'"></a><br>
                 2. Set your server IP as the <strong>origin server</strong><br>
@@ -7119,7 +7120,7 @@
           <!-- 1. Network & Access -->
           <div class="card">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-light)">
-              <div style="width:36px;height:36px;background:linear-gradient(135deg,#06b6d4,#0891b2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🌐</div>
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#06b6d4,#0891b2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px"><i class="fa-solid fa-globe"></i></div>
               <div><div style="font-size:13px;font-weight:700;color:var(--text-primary)">Network &amp; Access</div><div style="font-size:11px;color:var(--text-muted)">Panel port and domain settings</div></div>
             </div>
             <!-- Panel name -->
@@ -7156,7 +7157,7 @@
           <!-- 2. Panel SSL -->
           <div class="card">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-light)">
-              <div style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🔒</div>
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px"><i class="fa-solid fa-lock"></i></div>
               <div>
                 <div style="font-size:13px;font-weight:700;color:var(--text-primary)">Panel SSL</div>
                 <div style="font-size:11px;color:var(--text-muted)">HTTPS for the panel interface</div>
@@ -7221,7 +7222,7 @@
           <!-- 3. Authentication & Security -->
           <div class="card">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-light)">
-              <div style="width:36px;height:36px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🛡</div>
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px"><i class="fa-solid fa-shield"></i></div>
               <div><div style="font-size:13px;font-weight:700;color:var(--text-primary)">Authentication &amp; Security</div><div style="font-size:11px;color:var(--text-muted)">Panel login and access control</div></div>
             </div>
             <!-- 2FA row -->
@@ -7268,7 +7269,7 @@
           <!-- 4. PHP Webshell Scanner -->
           <div class="card">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-light)">
-              <div style="width:36px;height:36px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🔍</div>
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px"><i class="fa-solid fa-magnifying-glass"></i></div>
               <div><div style="font-size:13px;font-weight:700;color:var(--text-primary)">PHP Webshell Scanner</div><div style="font-size:11px;color:var(--text-muted)">Detect malicious PHP files in site directories</div></div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -7361,7 +7362,7 @@
           <!-- 6. System Info -->
           <div class="card">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-light)">
-              <div style="width:36px;height:36px;background:linear-gradient(135deg,#06b6d4,#0e7490);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">💻</div>
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#06b6d4,#0e7490);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px"><i class="fa-solid fa-laptop"></i></div>
               <div><div style="font-size:13px;font-weight:700;color:var(--text-primary)">System Information</div><div style="font-size:11px;color:var(--text-muted)">Server details</div></div>
             </div>
             <template x-for="[k,v] in [['OS',system.os],['Kernel',system.kernel],['CPU',system.cpu],['IP Address',system.ip],['Uptime',system.uptime],['ERROR MODZ',panelVersion]]" :key="k">
@@ -7403,7 +7404,7 @@
 
         <!-- -- Security sub-section (unchanged, shown when stab=security) -- -->
         <div x-show="stab==='security'" style="margin-top:16px">
-          <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px">🔐 Security Settings</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px"><i class="fa-solid fa-circle-dot"></i> Security Settings</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">
 
             <!-- 2FA card -->
@@ -7458,7 +7459,7 @@
                 <div class="skeleton skeleton-row"></div>
               </div>
               <div x-show="!auditLoading && auditLog.length===0" class="empty-state">
-                <div class="empty-icon">📋</div><div class="empty-text">No audit entries yet</div>
+                <div class="empty-icon"><i class="fa-solid fa-clipboard"></i></div><div class="empty-text">No audit entries yet</div>
               </div>
               <div x-show="!auditLoading && auditLog.length>0" style="max-height:320px;overflow-y:auto">
                 <table class="data-table" style="font-size:11px">
@@ -7548,7 +7549,7 @@
         <div @click="if(item.type==='dir'&&$store.vp.picker.mode==='dir'){$store.vp.picker.selected=item.path;}else if(item.type==='file'&&$store.vp.picker.mode==='file'){$store.vp.picker.selected=item.path;}"
              @dblclick="async()=>{if(item.type==='dir'){$store.vp.picker.path=item.path;$store.vp.picker.loading=true;const r=await(await fetch('/api/files/list?path='+encodeURIComponent(item.path))).json();$store.vp.picker.items=r.items||[];$store.vp.picker.loading=false;if($store.vp.picker.mode==='dir')$store.vp.picker.selected=item.path;}}"
              :style="'display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;'+($store.vp.picker.selected===item.path?'background:rgba(99,102,241,.12)':'')">
-          <span x-text="item.type==='dir'?'📁':'📄'" style="font-size:15px"></span>
+          <span x-text="item.type==='dir'?'<i class="fa-solid fa-folder-open"></i>':'<i class="fa-regular fa-file"></i>'" style="font-size:15px"></span>
           <span x-text="item.name" :style="item.type==='dir'?'':'color:var(--text-secondary)'"></span>
         </div>
       </template>
@@ -7988,7 +7989,7 @@
 
       <!-- Release notes -->
       <div x-show="updateModal.body" style="margin-bottom:16px">
-        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">📋 What's New</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px"><i class="fa-solid fa-clipboard"></i> What's New</div>
         <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;padding:14px;max-height:200px;overflow-y:auto;font-size:12px;color:var(--text-secondary);line-height:1.7;white-space:pre-wrap"
              x-text="updateModal.body"></div>
       </div>
