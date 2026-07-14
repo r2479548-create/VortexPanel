@@ -26,8 +26,8 @@ def manage_users():
             return jsonify({'ok': True})
         return jsonify({'ok': False, 'error': 'User already exists'})
 
-    if request.method == 'GET':
-    users = User.query.order_by(User.created_at.desc()).all()
+
+        users = User.query.order_by(User.created_at.desc()).all()
     data = []
     for u in users:
         data.append({
@@ -106,8 +106,8 @@ def manage_orders():
         db.session.commit()
         return jsonify({'ok': True})
 
-    if request.method == 'GET':
-    orders = Order.query.order_by(Order.created_at.desc()).all()
+
+        orders = Order.query.order_by(Order.created_at.desc()).all()
     data = []
     for o in orders:
         data.append({
