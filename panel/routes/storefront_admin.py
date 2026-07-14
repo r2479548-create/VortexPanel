@@ -7,9 +7,26 @@ storefront_admin_bp = Blueprint('storefront_admin', __name__)
 def req():
     return 'user' in session
 
-@storefront_admin_bp.route('/api/storefront/users', methods=['GET'])
-def list_users():
+@storefront_admin_bp.route('/api/storefront/users', methods=['GET', 'POST'])
+def manage_users():
     if not req(): return jsonify({'ok': False}), 401
+    
+    if request.method == 'POST':
+        data = request.json
+        from werkzeug.security import generate_password_hash
+        user = User.query.filter_by(email=data.get('email')).first()
+        if not user:
+            user = User(
+                username=data.get('username'),
+                email=data.get('email'),
+                password_hash=generate_password_hash(data.get('password', 'password123'))
+            )
+            db.session.add(user)
+            db.session.commit()
+            return jsonify({'ok': True})
+        return jsonify({'ok': False, 'error': 'User already exists'})
+
+    if request.method == 'GET':
     users = User.query.order_by(User.created_at.desc()).all()
     data = []
     for u in users:
@@ -63,9 +80,33 @@ def manage_plans():
         })
     return jsonify({'ok': True, 'plans': data})
 
-@storefront_admin_bp.route('/api/storefront/orders', methods=['GET'])
-def list_orders():
+@storefront_admin_bp.route('/api/storefront/orders', methods=['GET', 'POST'])
+def manage_orders():
     if not req(): return jsonify({'ok': False}), 401
+    
+    if request.method == 'POST':
+        data = request.json
+        user = User.query.filter_by(username=data.get('username')).first()
+        plan = Plan.query.filter_by(id=data.get('plan_id')).first()
+        if not user or not plan:
+            return jsonify({'ok': False, 'error': 'User or Plan not found'})
+            
+        import random, string
+        def rand_str(length=8): return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+        
+        order = Order(
+            user_id=user.id,
+            plan_id=plan.id,
+            domain=data.get('domain', f'vps-{rand_str(5)}.local'),
+            status=data.get('status', 'active'),
+            script_username='root',
+            script_password=rand_str(12)
+        )
+        db.session.add(order)
+        db.session.commit()
+        return jsonify({'ok': True})
+
+    if request.method == 'GET':
     orders = Order.query.order_by(Order.created_at.desc()).all()
     data = []
     for o in orders:

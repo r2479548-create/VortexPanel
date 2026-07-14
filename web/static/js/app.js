@@ -5238,6 +5238,20 @@ function filePickerModal() {
 function usersPage() {
   return {
     loading: true, users: [],
+    userForm: {username: '', email: '', password: ''},
+    showUserModal: false,
+    async saveUser() {
+      if (!this.userForm.username || !this.userForm.email) return toast('Fill required fields', 'error');
+      const r = await post('/api/storefront/users', this.userForm);
+      if (r.ok) {
+        toast('User created successfully', 'success');
+        this.showUserModal = false;
+        this.load();
+      } else {
+        toast(r.error || 'Failed to add user', 'error');
+      }
+    },
+
     init() {
       this.load();
       window.addEventListener('vp:page', e => { if (e.detail === 'users') this.load(); });
@@ -5296,6 +5310,20 @@ function plansPage() {
 function ordersPage() {
   return {
     loading: true, orders: [],
+    orderForm: {username: '', plan_id: '', domain: '', status: 'active'},
+    showOrderModal: false,
+    async saveOrder() {
+      if (!this.orderForm.username || !this.orderForm.plan_id) return toast('Fill required fields', 'error');
+      const r = await post('/api/storefront/orders', this.orderForm);
+      if (r.ok) {
+        toast('Order created successfully', 'success');
+        this.showOrderModal = false;
+        this.load();
+      } else {
+        toast(r.error || 'Failed to add order', 'error');
+      }
+    },
+
     init() {
       this.load();
       window.addEventListener('vp:page', e => { if (e.detail === 'orders') this.load(); });

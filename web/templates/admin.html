@@ -20,7 +20,7 @@
 -->
   <style>[x-cloak]{display:none!important}</style>
   <!-- app.js must load before Alpine so all function definitions exist -->
-  <script src="/static/js/app.js?v=1784026660"></script>
+  <script src="/static/js/app.js?v=1784027486"></script>
   <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -8072,6 +8072,7 @@
       <div x-show="page==='users'" x-data="usersPage()">
         <div class="page-header">
           <div><div class="page-title">SaaS Users</div><div class="page-sub">Manage users who registered on the Storefront</div></div>
+          <button class="btn btn-primary" @click="userForm={username:'',email:'',password:''}; showUserModal=true"><i class="fa-solid fa-plus"></i> Add User</button>
         </div>
         <div class="card">
           <table class="table">
@@ -8090,6 +8091,23 @@
           </table>
         </div>
       </div>
+
+
+        <div class="modal" x-show="showUserModal" style="display:none">
+          <div class="modal-content" @click.outside="showUserModal=false">
+            <h3>Add New User</h3>
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" x-model="userForm.username">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" x-model="userForm.email">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" x-model="userForm.password">
+            <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+              <button class="btn" @click="showUserModal=false">Cancel</button>
+              <button class="btn btn-primary" @click="saveUser()">Save</button>
+            </div>
+          </div>
+        </div>
 
       <!-- PLANS PAGE -->
       <div x-show="page==='plans'" x-data="plansPage()">
@@ -8168,6 +8186,7 @@
       <div x-show="page==='orders'" x-data="ordersPage()">
         <div class="page-header">
           <div><div class="page-title">SaaS Orders</div><div class="page-sub">View provisioned panels and domains</div></div>
+          <button class="btn btn-primary" @click="orderForm={username:'',plan_id:'',domain:'',status:'active'}; showOrderModal=true"><i class="fa-solid fa-plus"></i> Add Order</button>
         </div>
         <div class="card">
           <table class="table">
