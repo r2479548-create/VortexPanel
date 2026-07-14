@@ -205,6 +205,12 @@ function rootApp() {
       body:'', published:'', url:'', error:'',
     },
     nav: [
+      { group: 'SaaS Business', items: [
+        { id:'users',  icon:'👥', label:'SaaS Users',  color:'#db2777', colorBg:'#fce7f3' },
+        { id:'plans',  icon:'🛍', label:'SaaS Plans',  color:'#d97706', colorBg:'#fef3c7' },
+        { id:'orders', icon:'🛒', label:'SaaS Orders', color:'#2563eb', colorBg:'#dbeafe' },
+      ]},
+
       { group: 'Overview', items: [
         { id:'dashboard',    icon:'▦', label:'Dashboard',        color:'#2563eb', colorBg:'#dbeafe' },
         { id:'websites',     icon:'🌐', label:'Websites',        color:'#16a34a', colorBg:'#dcfce7' },
@@ -5227,3 +5233,80 @@ function filePickerModal() {
 // Alpine.store: Global modal state - initialized at top of file in alpine:init
 // ============================================================
 
+
+
+function usersPage() {
+  return {
+    loading: true, users: [],
+    init() {
+      this.load();
+      window.addEventListener('vp:page', e => { if (e.detail === 'users') this.load(); });
+    },
+    async load() {
+      this.loading = true;
+      try {
+        const r = await get('/api/storefront/users');
+        if (r.ok) { this.users = r.users || []; }
+      } catch {}
+      this.loading = false;
+    }
+  };
+}
+
+function plansPage() {
+  return {
+    loading: true, plans: [], showModal: false,
+    form: { id: '', name: '', description: '', price: 0, billing_cycle: 'monthly', script_type: 'smm' },
+    init() {
+      this.load();
+      window.addEventListener('vp:page', e => { if (e.detail === 'plans') this.load(); });
+    },
+    async load() {
+      this.loading = true;
+      try {
+        const r = await get('/api/storefront/plans');
+        if (r.ok) { this.plans = r.plans || []; }
+      } catch {}
+      this.loading = false;
+    },
+    edit(p) {
+      if(p) {
+        this.form = {...p};
+      } else {
+        this.form = { id: '', name: '', description: '', price: 0, billing_cycle: 'monthly', script_type: 'smm' };
+      }
+      this.showModal = true;
+    },
+    async save() {
+      try {
+        const r = await post('/api/storefront/plans', this.form);
+        if (r.ok) { this.showModal = false; this.load(); }
+      } catch {}
+    },
+    async del(id) {
+      if(!confirm('Delete this plan?')) return;
+      try {
+        await fetch('/api/storefront/plans/'+id, {method:'DELETE'});
+        this.load();
+      } catch {}
+    }
+  };
+}
+
+function ordersPage() {
+  return {
+    loading: true, orders: [],
+    init() {
+      this.load();
+      window.addEventListener('vp:page', e => { if (e.detail === 'orders') this.load(); });
+    },
+    async load() {
+      this.loading = true;
+      try {
+        const r = await get('/api/storefront/orders');
+        if (r.ok) { this.orders = r.orders || []; }
+      } catch {}
+      this.loading = false;
+    }
+  };
+}

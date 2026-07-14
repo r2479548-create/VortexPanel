@@ -1,0 +1,204 @@
+function rootApp() {
+  return {
+    // Auth state
+    loggedIn:  false,
+    authChecked: false,
+    loginUser: '',
+    loginPass: '',
+    loginErr:  '',
+    loginLoading: false,
+    show2fa: false,
+    totpCode: '',
+    totpErr: '',
+    totpLoading: false,
+
+    // Panel state
+    username: '', page: 'dashboard',
+    sidebarOpen: false,
+    online: true,
+    moduleStatus: {},
+    updateAvailable: false,
+    updateModal: {
+      show:false, current:'v3.1.0', latest:'', name:'',
+      body:'', published:'', url:'', error:'',
+    },
+    nav: [
+      { group: 'Overview', items: [
+        { id:'dashboard',    icon:'▦', label:'Dashboard',        color:'#2563eb', colorBg:'#dbeafe' },
+        { id:'websites',     icon:'🌐', label:'Websites',        color:'#16a34a', colorBg:'#dcfce7' },
+        { id:'wp',           icon:'🔷', label:'WP Toolkit',      color:'#2563eb', colorBg:'#dbeafe' },
+        { id:'node-projects',icon:'💚', label:'Node.js Projects',color:'#16a34a', colorBg:'#dcfce7' },
+        { id:'go-projects',  icon:'🔵', label:'Go Projects',     color:'#0369a1', colorBg:'#e0f2fe' },
+        { id:'databases',    icon:'🗄', label:'Databases',       color:'#d97706', colorBg:'#fef3c7' },
+        { id:'files',        icon:'📁', label:'File Manager',    color:'#db2777', colorBg:'#fce7f3' },
+      ]},
+      { group: 'Server', items: [
+        { id:'services',  icon:'⚙', label:'Services',    color:'#7c3aed', colorBg:'#ede9fe' },
+        { id:'modules',   icon:'📦', label:'App Store',   color:'#0891b2', colorBg:'#cffafe' },
+        { id:'docker',    icon:'🐋', label:'Docker',      color:'#0369a1', colorBg:'#e0f2fe' },
+        { id:'firewall',  icon:'🛡', label:'Firewall',    color:'#dc2626', colorBg:'#fee2e2' },
+        { id:'terminal',  icon:'⌨', label:'Terminal',    color:'#374151', colorBg:'#f3f4f6' },
+        { id:'backups',   icon:'💾', label:'Backups',     color:'#059669', colorBg:'#d1fae5' },
+      ]},
+      { group: 'Network', items: [
+        { id:'mail',  icon:'📧', label:'Mail Server', color:'#c2410c', colorBg:'#ffedd5' },
+        { id:'ftp',   icon:'📂', label:'FTP / SFTP',  color:'#0e7490', colorBg:'#cffafe' },
+        { id:'cdn',   icon:'⚡', label:'CDN Manager', color:'#a16207', colorBg:'#fef9c3' },
+      ]},
+      { group: 'System', items: [
+        { id:'cron',       icon:'⏱', label:'Cron Jobs',  color:'#6d28d9', colorBg:'#ede9fe' },
+        { id:'monitoring', icon:'📊', label:'Monitoring', color:'#0f766e', colorBg:'#ccfbf1' },
+        { id:'logs',       icon:'📋', label:'Log Viewer', color:'#374151', colorBg:'#f3f4f6' },
+        { id:'bandwidth',  icon:'📈', label:'Bandwidth',  color:'#0369a1', colorBg:'#e0f2fe' },
+        { id:'security',   icon:'🔐', label:'Security',   color:'#b91c1c', colorBg:'#fee2e2' },
+        { id:'waf',        icon:'🛡', label:'WAF',        color:'#9333ea', colorBg:'#f3e8ff' },
+        { id:'settings',   icon:'⚙', label:'Settings',   color:'#374151', colorBg:'#f3f4f6' },
+      ]},
+    ],
+
+    async init() {
+      window.addEventListener('nav', e => this.go(e.detail.page));
+      // Check existing session first
+      try {
+        const r = await get('/api/auth/check');
+        if (r.ok && r.logged_in) {
+          this.username = r.username || 'admin';
+          this.loggedIn = true;
+          await this._onLoggedIn();
+        }
+      } catch {}
+      this.authChecked = true;
+    },
+
+    // --- Login -----------------------------------------------------------------
+    async doLogin() {
+      if (!this.loginUser || !this.loginPass) {
+        this.loginErr = 'Enter username and password'; return;
+      }
+      this.loginLoading = true;
+      this.loginErr = '';
+      try {
+        const r = await post('/api/auth/login', {
+          username: this.loginUser,
+          password: this.loginPass,
+        });
+        if (r.ok && r.requires_2fa) {
+          // Server accepted password but 2FA is required
+          this.show2fa = true;
+          this.totpCode = '';
+          this.totpErr = '';
+        } else if (r.ok) {
+          this.username = this.loginUser;
+          this.loggedIn = true;
+          this.loginPass = '';
+          await this._onLoggedIn();
+        } else {
+          this.loginErr = r.error || 'Invalid username or password';
+        }
+      } catch(e) {
+        this.loginErr = 'Connection error — try again';
+      }
+      this.loginLoading = false;
+    },
+
+    async verify2fa() {
+      if (!this.totpCode) { this.totpErr = 'Enter the 6-digit code'; return; }
+      this.totpLoading = true;
+      this.totpErr = '';
+      try {
+        const r = await post('/api/auth/verify-2fa', { code: this.totpCode });
+        if (r.ok) {
+          this.show2fa = false;
+          this.username = r.username || this.loginUser;
+          this.loggedIn = true;
+          this.loginPass = '';
+          this.totpCode = '';
+          await this._onLoggedIn();
+        } else {
+          this.totpErr = r.error || 'Invalid code';
+        }
+      } catch(e) {
+        this.totpErr = 'Connection error — try again';
+      }
+      this.totpLoading = false;
+    },
+
+    async _onLoggedIn() {
+      // Restore page from URL hash (e.g. #files → go to files page)
+      const hash = window.location.hash.replace('#', '');
+      const validPages = ['dashboard','websites','databases','files','modules',
+                          'services','firewall','terminal','backups','mail','ftp',
+                          'cron','monitoring','bandwidth','security','docker','caddy',
+                          'cdn','logs','settings','node-projects','go-projects','wp'];
+      if (hash && validPages.includes(hash)) {
+        this.page = hash;
+      }
+      // Load module status for sidebar indicators
+      try {
+        const r = await get('/api/modules');
+        if (r.ok) r.modules.forEach(m => { this.moduleStatus[m.id] = m.installed; });
+      } catch {}
+      // Silent update check after 3s
+      setTimeout(() => this.silentUpdateCheck(), 3000);
+      document.dispatchEvent(new CustomEvent('vortex-logged-in'));
+    },
+
+    // --- Panel navigation -------------------------------------------------------
+    go(id) {
+      this.page = id;
+      this.sidebarOpen = false;
+      if (history.replaceState) history.replaceState(null, '', '#' + id);
+      // Notify page components so they refresh their data
+      window.dispatchEvent(new CustomEvent('vp:page', {detail: id}));
+    },
+
+    pageTitle() {
+      for (const g of this.nav) {
+        const item = g.items.find(i => i.id === this.page);
+        if (item) return item.label;
+      }
+      return '';
+    },
+
+    pageAvailable(pageId) {
+      const requires = {
+        'ftp':  ['pure-ftpd','proftpd','vsftpd'],
+        'mail': ['postfix'],
+      };
+      const req = requires[pageId];
+      if (!req) return true;
+      return req.some(m => this.moduleStatus[m]);
+    },
+
+    logout() {
+      fetch('/api/auth/logout', {method:'POST'})
+        .then(() => { this.loggedIn=false; this.loginUser=''; this.loginPass=''; this.loginErr=''; });
+    },
+
+    // --- Update -----------------------------------------------------------------
+    async silentUpdateCheck() {
+      try {
+        const r = await get('/api/update/check');
+        if (r.current) this.updateModal.current = r.current;
+        if (r.ok && r.has_update) {
+          this.updateAvailable = true;
+          this.updateModal.latest    = r.latest    || r.current;
+          this.updateModal.name      = r.name      || 'ERROR MODZ';
+          this.updateModal.body      = r.body      || '';
+          this.updateModal.published = r.published || '';
+          this.updateModal.url       = r.url       || '';
+        }
+      } catch {}
+    },
+
+    async openUpdateModal() {
+      this.updateModal.show = true;
+      this.$nextTick(() => {
+        document.dispatchEvent(new CustomEvent('vortex-check-update'));
+      });
+    },
+  };
+}
+
+
+// --- DASHBOARD ------------------------------------------------------------------

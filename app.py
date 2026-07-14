@@ -24,6 +24,7 @@ from panel.routes.auth      import auth_bp
 from panel.routes.storefront import storefront_bp
 from panel.routes.zapupi import zapupi_bp
 from panel.routes.dashboard import dashboard_bp
+from panel.routes.storefront_admin import storefront_admin_bp
 from panel.routes.websites_core import websites_bp
 from panel.routes.websites_ssl import *  # noqa
 from panel.routes.websites_proxy import *  # noqa
@@ -144,7 +145,7 @@ def create_app():
                dns_bp, mail_bp, ftp_bp, cron_bp, docker_bp, monitoring_bp,
                settings_bp, modules_bp, main_bp, security_bp, bandwidth_bp,
                caddy_bp, cdn_bp, update_bp, ai_bp, ddns_bp, cloud_backup_bp,
-               logs_bp, wp_bp, nodejs_bp, go_bp, import_bp, zapupi_bp, storefront_bp]:
+               logs_bp, wp_bp, nodejs_bp, go_bp, import_bp, zapupi_bp, storefront_bp, storefront_admin_bp]:
         app.register_blueprint(bp)
     terminal_sock.init_app(app)
 
